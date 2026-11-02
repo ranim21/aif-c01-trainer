@@ -59,7 +59,7 @@
   }
   function confetti(n) {
     if (root.matchMedia && root.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    var colors = ["#6d4aff", "#ff9f1c", "#16a34a", "#ef4444", "#06b6d4", "#facc15"];
+    var colors = ["#ff9900", "#ff9f1c", "#16a34a", "#ef4444", "#06b6d4", "#facc15"];
     for (var i = 0; i < (n || 70); i++) {
       var c = doc.createElement("i");
       c.className = "confetti";
@@ -87,7 +87,7 @@
   /* ---------- Schémas du cours (SVG inline) ---------- */
   var DIAGRAMS = {
     nested: '<svg viewBox="0 0 320 250" role="img" aria-label="AI contient ML qui contient Deep Learning qui contient GenAI">' +
-      '<ellipse cx="160" cy="125" rx="155" ry="120" fill="#6d4aff22" stroke="#6d4aff" stroke-width="2"/>' +
+      '<ellipse cx="160" cy="125" rx="155" ry="120" fill="#ff990022" stroke="#ff9900" stroke-width="2"/>' +
       '<ellipse cx="160" cy="145" rx="118" ry="92" fill="#06b6d422" stroke="#06b6d4" stroke-width="2"/>' +
       '<ellipse cx="160" cy="165" rx="82" ry="64" fill="#f9731622" stroke="#f97316" stroke-width="2"/>' +
       '<ellipse cx="160" cy="185" rx="48" ry="36" fill="#16a34a22" stroke="#16a34a" stroke-width="2"/>' +
@@ -99,7 +99,7 @@
     fit: '<svg viewBox="0 0 330 120" role="img" aria-label="Underfitting, good fit, overfitting">' +
       [0, 1, 2].map(function (k) {
         var x0 = 5 + k * 110, pts = [[15, 85], [30, 70], [45, 72], [60, 50], [75, 48], [90, 30]];
-        var dots = pts.map(function (p) { return '<circle cx="' + (x0 + p[0]) + '" cy="' + p[1] + '" r="3.5" fill="#6d4aff"/>'; }).join("");
+        var dots = pts.map(function (p) { return '<circle cx="' + (x0 + p[0]) + '" cy="' + p[1] + '" r="3.5" fill="#ff9900"/>'; }).join("");
         var curve = k === 0 ? '<line x1="' + (x0 + 8) + '" y1="62" x2="' + (x0 + 98) + '" y2="58" stroke="#ef4444" stroke-width="2.5"/>'
           : k === 1 ? '<path d="M' + (x0 + 8) + ' 90 Q ' + (x0 + 55) + ' 62 ' + (x0 + 98) + ' 26" fill="none" stroke="#16a34a" stroke-width="2.5"/>'
           : '<polyline points="' + pts.map(function (p) { return (x0 + p[0]) + "," + p[1]; }).join(" ") + '" fill="none" stroke="#f97316" stroke-width="2.5"/>';
@@ -110,9 +110,9 @@
     pipeline: '<svg viewBox="0 0 320 300" role="img" aria-label="Pipeline ML en boucle">' +
       ["1 Business goal", "2 Data collection", "3 Data prep & features", "4 Training", "5 Evaluation", "6 Deployment", "7 Monitoring"].map(function (t, i) {
         var y = 8 + i * 41;
-        return '<rect x="40" y="' + y + '" width="210" height="30" rx="10" fill="#6d4aff1f" stroke="#6d4aff"/>' +
+        return '<rect x="40" y="' + y + '" width="210" height="30" rx="10" fill="#ff99001f" stroke="#ff9900"/>' +
           '<text x="145" y="' + (y + 20) + '" text-anchor="middle" font-size="13" font-weight="600">' + t + "</text>" +
-          (i < 6 ? '<path d="M145 ' + (y + 30) + ' v10" stroke="#6d4aff" stroke-width="2"/>' : "");
+          (i < 6 ? '<path d="M145 ' + (y + 30) + ' v10" stroke="#ff9900" stroke-width="2"/>' : "");
       }).join("") +
       '<path d="M250 269 h40 V 120 h-38" fill="none" stroke="#f97316" stroke-width="2" stroke-dasharray="5 4"/>' +
       '<text x="296" y="200" font-size="11" text-anchor="middle" transform="rotate(-90 296 200)">Re-training</text></svg>',
@@ -133,12 +133,26 @@
     }).join("") +
     '<text x="160" y="118" text-anchor="middle" font-size="11" opacity=".8">sens proche = vecteurs proches</text></svg>';
   DIAGRAMS.agentloop = '<svg viewBox="0 0 320 200" role="img" aria-label="Boucle d\'un agent : raisonner, agir, observer">' +
-    '<circle cx="160" cy="100" r="62" fill="none" stroke="#6d4aff" stroke-width="2" stroke-dasharray="6 5"/>' +
+    '<circle cx="160" cy="100" r="62" fill="none" stroke="#ff9900" stroke-width="2" stroke-dasharray="6 5"/>' +
     [["🧠 Raisonner", 160, 30], ["🛠️ Agir (outil)", 250, 140], ["👀 Observer", 70, 140]].map(function (p) {
-      return '<rect x="' + (p[1] - 58) + '" y="' + (p[2] - 16) + '" width="116" height="30" rx="10" fill="#6d4aff22" stroke="#6d4aff"/><text x="' + p[1] + '" y="' + (p[2] + 4) + '" text-anchor="middle" font-size="12" font-weight="600">' + p[0] + "</text>";
+      return '<rect x="' + (p[1] - 58) + '" y="' + (p[2] - 16) + '" width="116" height="30" rx="10" fill="#ff990022" stroke="#ff9900"/><text x="' + p[1] + '" y="' + (p[2] + 4) + '" text-anchor="middle" font-size="12" font-weight="600">' + p[0] + "</text>";
     }).join("") +
     '<text x="160" y="96" text-anchor="middle" font-size="12" font-weight="700">Objectif</text><text x="160" y="112" text-anchor="middle" font-size="10">+ mémoire</text>' +
     '<text x="160" y="192" text-anchor="middle" font-size="10">Outils via API / MCP · jusqu\'à ce que la tâche soit accomplie</text></svg>';
+  DIAGRAMS.rag = '<svg viewBox="0 0 320 230" role="img" aria-label="Pipeline RAG">' +
+    '<text x="10" y="16" font-size="11" font-weight="700">Ingestion (une fois)</text>' +
+    [["Documents", 10], ["Chunking", 88], ["Embeddings", 166], ["Base vectorielle", 244]].map(function (p, i) {
+      return '<rect x="' + p[1] + '" y="24" width="72" height="30" rx="8" fill="#ff990022" stroke="#ff9900"/><text x="' + (p[1] + 36) + '" y="43" text-anchor="middle" font-size="9.5">' + p[0] + "</text>" + (i < 3 ? '<path d="M' + (p[1] + 72) + ' 39 h6" stroke="#ff9900" stroke-width="2"/>' : "");
+    }).join("") +
+    '<text x="10" y="86" font-size="11" font-weight="700">À chaque question</text>' +
+    [["1 Question → embedding", 96], ["2 Récupérer les chunks proches", 128], ["3 Ajouter au prompt (augment)", 160], ["4 Le FM génère + cite", 192]].map(function (p) {
+      return '<rect x="10" y="' + p[1] + '" width="300" height="26" rx="8" fill="#232f3e14" stroke="#232f3e88"/><text x="160" y="' + (p[1] + 17) + '" text-anchor="middle" font-size="11">' + p[0] + "</text>";
+    }).join("") + "</svg>";
+  DIAGRAMS.customcost = '<svg viewBox="0 0 320 170" role="img" aria-label="Coût croissant des approches de personnalisation">' +
+    [["Prompt", 1], ["RAG", 2], ["Fine-tuning", 3], ["Cont. pre-train", 4], ["Pre-training", 5]].map(function (p, i) {
+      var h = 18 + p[1] * 22, x = 12 + i * 61;
+      return '<rect x="' + x + '" y="' + (140 - h) + '" width="50" height="' + h + '" rx="6" fill="#ff9900" opacity="' + (0.35 + i * 0.15) + '"/><text x="' + (x + 25) + '" y="156" text-anchor="middle" font-size="9">' + p[0] + "</text>";
+    }).join("") + '<text x="12" y="14" font-size="10">Coût / effort / données nécessaires →</text></svg>';
   function registerDiagram(id, svg) { DIAGRAMS[id] = svg; }
 
   /* Rendu des blocs de cours (contenu de confiance écrit dans data/*.js) */

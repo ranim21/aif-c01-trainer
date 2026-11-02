@@ -53,7 +53,7 @@
     document.body.classList.add("fullscreen");
     setHTML((hasProfiles ? '<button class="icon-btn" id="back" aria-label="Retour">←</button>' : "") +
       '<div class="card center"><div style="font-size:3rem">🚀</div><h1>Inscription</h1>' +
-      '<p>Traverse 5 mondes, bats les boss et décroche ta certification <b>AWS Certified AI Practitioner (AIF-C01)</b> du premier coup.</p></div>' +
+      '<p>Suis le parcours des 5 domaines officiels, valide chaque examen de domaine et décroche ta certification <b>AWS Certified AI Practitioner (AIF-C01)</b> du premier coup.</p></div>' +
       '<div class="card"><h2>Ton avatar</h2><div class="avatar-pick" id="ava">' +
       META.avatars.map(function (a) { return '<button type="button" data-a="' + a + '" class="' + (a === pick ? "sel" : "") + '" aria-label="Avatar ' + a + '">' + a + "</button>"; }).join("") +
       '</div><h2 style="margin-top:16px">Ton pseudo</h2><input class="input" id="pseudo" maxlength="20" placeholder="ex. CloudNinja" autocomplete="off">' +
@@ -151,10 +151,10 @@
       var avail = lv.some(function (l) { return l.available; });
       var open = E.worldUnlocked(s, app.levels, w.id);
       var starsGot = lv.reduce(function (a, l) { return a + ((s.levels[l.id] && s.levels[l.id].stars) || 0); }, 0);
-      html += '<section class="world ' + (open ? "" : "locked") + '"><div class="world-head" style="background:linear-gradient(135deg,' + w.color + ',' + w.color + 'aa)">' +
-        '<span class="big">' + w.emoji + '</span><div class="grow"><b>Monde ' + w.id + " · " + esc(w.name) + '</b><small>' + esc(w.domain) + " · " + w.weight + ' % de l\'examen</small></div>' +
+      html += '<section class="world ' + (open ? "" : "locked") + '"><div class="world-head">' +
+        '<span class="big">' + w.emoji + '</span><div class="grow"><b>Domaine ' + w.id + " · " + esc(w.name) + '</b><small>' + esc(w.domain) + " · " + w.weight + ' % de l\'examen</small></div>' +
         '<div class="center small"><b>' + starsGot + "/" + lv.length * 3 + '</b><br>★</div></div>';
-      if (!avail) { html += '<div class="card flat center muted small" style="margin-top:8px">🚧 Ce monde arrive dans une prochaine mise à jour.</div></section>'; return; }
+      if (!avail) { html += '<div class="card flat center muted small" style="margin-top:8px">🚧 Ce domaine arrive dans une prochaine mise à jour.</div></section>'; return; }
       html += '<div class="row" style="margin:10px 0 0"><button class="btn small" data-course="' + w.id + '">📚 Cours</button><button class="btn small" data-labs="' + w.id + '">🧪 Exercices</button><button class="btn small" data-flash="' + w.id + '">🃏 Flashcards</button></div>';
       html += '<div class="path">';
       lv.forEach(function (l, i) {
@@ -189,8 +189,8 @@
     if (!E.isUnlocked(s, app.levels, levelId)) { U.toast("🔒 Réussis d'abord le niveau précédent (70 % minimum)."); U.sfx("ko"); return; }
     var rec = s.levels[levelId], w = worldOf(l.world);
     var nq = E.questionsForLevel(l, app.modules).length;
-    var desc = l.kind === "boss" ? "15 questions parmi les plus difficiles du monde. 5 cœurs. Fais tomber sa barre de vie et atteins 70 % pour débloquer le monde suivant !"
-      : l.kind === "mix" ? "10 questions tirées au hasard dans tout le monde. Parfait pour consolider."
+    var desc = l.kind === "boss" ? "Examen de fin de domaine : 15 questions parmi les plus difficiles, 5 cœurs. Atteins 70 % pour valider le domaine et débloquer le suivant."
+      : l.kind === "mix" ? "10 questions tirées au hasard dans tout le domaine. Parfait pour consolider."
       : esc(taskInfo(l.task).title) + "<br><span class='muted'>" + nq + " questions · 3 cœurs</span>";
     U.modal('<h2>' + (l.kind === "boss" ? w.boss.emoji + " " : "") + esc(l.title) + "</h2><p>" + desc + "</p>" +
       (rec ? '<p class="small">Meilleur score : <b>' + pct(rec.best) + '</b> · <span style="color:var(--accent)">' + starsStr(rec.stars) + "</span> · " + rec.plays + " partie(s)</p>" : "") +
@@ -338,8 +338,8 @@
     var hearts = s.lives === Infinity ? "∞" : "❤️".repeat(Math.max(0, s.lives)) + "🤍".repeat(Math.max(0, s.maxLives - s.lives));
     var h = '<div class="quiz-top"><button class="icon-btn" id="quit" aria-label="Quitter">✕</button><div class="grow"><div class="progress"><i style="width:' + (s.idx / total * 100) + '%"></i></div></div><span class="hearts" aria-label="Vies">' + hearts + "</span></div>";
     if (s.mode === "boss") {
-      var w = worldOf(s.world), hp = 1 - s.correctCount / total;
-      h += '<div class="boss-box"><span class="face' + (ans && ans.correct ? " hit" : "") + '">' + w.boss.emoji + '</span><div class="small"><b>' + esc(w.boss.name) + '</b></div><div class="hp"><i style="width:' + (hp * 100) + '%"></i></div></div>';
+      var w = worldOf(s.world), need = Math.ceil(total * 0.7), got = Math.min(s.correctCount / need, 1);
+      h += '<div class="boss-box"><div class="small"><b>' + w.boss.emoji + " " + esc(w.boss.name) + '</b> · objectif 70 % : ' + s.correctCount + "/" + need + ' bonnes réponses</div><div class="hp"><i style="width:' + (got * 100) + '%"></i></div></div>';
     }
     if (s.timer && !ans) h += '<div class="timer-bar"><i id="tbar" style="width:100%"></i></div>';
     h += '<div class="meta-line"><span>Question ' + (s.idx + 1) + "/" + total + " · " + q.task + ' <span class="pill ' + q.difficulty + '">' + q.difficulty + "</span></span>" +
@@ -429,14 +429,14 @@
     var r = E.sessionResult(s);
     if (!s.applied) { s.reward = E.applyResult(st(), r, { levels: app.levels }); s.applied = true; app.save(); app.renderTop(); }
     var rw = s.reward, w = s.world ? worldOf(s.world) : null;
-    var title = r.failed ? "💔 Plus de cœurs !" : !s.levelId ? "🏁 Partie terminée !" : r.passed ? (s.mode === "boss" ? "🏆 " + w.boss.name + " est vaincu !" : "🎉 Niveau réussi !") : "😅 Pas encore…";
+    var title = r.failed ? "💔 Plus de cœurs !" : !s.levelId ? "🏁 Session terminée !" : r.passed ? (s.mode === "boss" ? "🎓 " + w.boss.name + " réussi !" : "🎉 Leçon validée !") : "😅 Pas encore…";
     var h = '<div class="card center"><h1>' + title + "</h1>";
     if (s.levelId) h += '<div style="font-size:2.4rem;color:var(--accent);letter-spacing:4px">' + starsStr(r.stars) + "</div>";
     h += '<div class="grid2" style="margin:12px 0"><div class="stat"><b>' + pct(r.pct) + '</b><span class="small muted">' + r.correct + "/" + r.answered + ' bonnes</span></div><div class="stat"><b>' + r.points + '</b><span class="small muted">points</span></div>' +
       '<div class="stat"><b>+' + rw.xpGain + '</b><span class="small muted">XP</span></div><div class="stat"><b>+' + rw.coins + ' 💰</b><span class="small muted">pièces</span></div></div>';
     if (r.maxStreak >= 3) h += '<p>🔥 Meilleur combo : <b>' + r.maxStreak + "</b></p>";
     if (!r.passed && s.levelId) h += '<p class="muted">Il faut 70 % sans perdre tous tes cœurs. Relis le cours puis retente : tu y es presque !</p>';
-    if (rw.firstClear && s.mode === "boss") h += '<p><b>🌍 Monde suivant débloqué !</b></p>';
+    if (rw.firstClear && s.mode === "boss") h += '<p><b>🔓 Domaine suivant débloqué !</b></p>';
     if (rw.goalReached) h += '<p>🎯 Objectif du jour atteint ! +25 💰</p>';
     if (rw.leveledUp) { var t = E.titleFor(rw.newLevel, META.playerTitles); h += '<p style="font-size:1.1rem">⬆️ <b>Niveau ' + rw.newLevel + "</b> : " + t.emoji + " " + t.title + "</p>"; }
     if (rw.newBadges.length) h += '<p>Nouveaux badges : ' + rw.newBadges.map(function (id) { var b = META.badges.find(function (x) { return x.id === id; }); return b ? b.emoji + " " + b.name : id; }).join(", ") + "</p>";
@@ -444,7 +444,7 @@
     var wrong = r.log.filter(function (e) { return e.ok === false; });
     if (wrong.length) h += '<div class="card"><h2>📌 À retenir (' + wrong.length + ' erreur' + (wrong.length > 1 ? "s" : "") + ")</h2><p class=\"small muted\">Ces questions sont ajoutées au Donjon des erreurs pour être rejouées plus tard.</p>" +
       wrong.map(function (e) { var q = app.qById[e.id]; return '<details class="section"><summary>' + esc(q.question.slice(0, 90)) + (q.question.length > 90 ? "…" : "") + '</summary><div class="body">' + correctAnswerHTML(q) + explanationHTML(q, null, false) + "</div></details>"; }).join("") + "</div>";
-    h += '<div class="grid2"><button class="btn" id="again">🔁 Rejouer</button><button class="btn primary" id="toMap">🗺️ Carte</button></div>';
+    h += '<div class="grid2"><button class="btn" id="again">🔁 Rejouer</button><button class="btn primary" id="toMap">🧭 Parcours</button></div>';
     setHTML(h);
     if (r.passed || rw.leveledUp) { U.sfx("win"); U.confetti(rw.leveledUp || s.mode === "boss" ? 120 : 60); }
     if (rw.newBadges.length) U.toast("🏅 Nouveau badge débloqué !");
@@ -471,7 +471,7 @@
     tasks.forEach(function (t) { s.courseOpened[t.id] = true; });
     var nb = E.checkBadges(s, { levels: app.levels }); app.save();
     if (nb.length) U.toast("🏅 Nouveau badge : Studieux !");
-    var h = '<div class="row" style="margin-bottom:10px"><button class="icon-btn" id="back" aria-label="Retour">←</button><h1 class="grow" style="margin:0">' + w.emoji + " Cours · Monde " + w.id + "</h1></div>";
+    var h = '<div class="row" style="margin-bottom:10px"><button class="icon-btn" id="back" aria-label="Retour">←</button><h1 class="grow" style="margin:0">' + w.emoji + " Cours · Domaine " + w.id + "</h1></div>";
     if (!task) h += '<div class="card"><p>' + mod.course.intro + '</p><p class="small muted">Touche une section pour l\'ouvrir.</p></div>';
     tasks.forEach(function (t) {
       h += '<h2 style="margin-top:18px">' + t.id + " · " + esc(t.fr) + '</h2><p class="small muted" style="margin-top:-6px"><i>' + esc(t.title) + "</i></p>";
@@ -490,7 +490,7 @@
   S.labs = function (worldId) {
     var app = A(), w = worldOf(+worldId), mod = app.modules[+worldId];
     if (!mod || !mod.labs) { U.toast("Exercices bientôt disponibles"); return app.go("map"); }
-    var h = '<div class="row" style="margin-bottom:10px"><button class="icon-btn" id="back" aria-label="Retour">←</button><h1 class="grow" style="margin:0">🧪 Exercices · Monde ' + w.id + "</h1></div>" +
+    var h = '<div class="row" style="margin-bottom:10px"><button class="icon-btn" id="back" aria-label="Retour">←</button><h1 class="grow" style="margin:0">🧪 Exercices · Domaine ' + w.id + "</h1></div>" +
       '<p class="muted small">Scénarios « quel service et pourquoi ? » et TP guidés dans la console AWS. Réfléchis avant de révéler la réponse !</p>';
     mod.labs.forEach(function (l) {
       h += '<details class="section"><summary>' + (l.kind === "console" ? "🖥️ " : "🧩 ") + esc(l.title) + ' <span class="pill">' + l.task + '</span></summary><div class="body">';
@@ -543,8 +543,8 @@
     var app = A(), s = st(), due = E.dungeonDue(s, E.todayStr()).length, inDungeon = Object.keys(s.dungeon).length;
     var avail = META.worlds.filter(function (w) { return app.modules[w.id] && app.modules[w.id].questions; });
     var h = '<h1>🎯 Modes de jeu</h1>' +
-      '<div class="card"><h2>🏋️ Entraînement libre</h2><p class="small muted">Choisis le monde, la task statement et la difficulté. Pas de cœurs, à ton rythme.</p>' +
-      '<label class="small">Monde</label><select class="input" id="fWorld"><option value="0">Tous les mondes disponibles</option>' + avail.map(function (w) { return '<option value="' + w.id + '">' + w.emoji + " Monde " + w.id + "</option>"; }).join("") + "</select>" +
+      '<div class="card"><h2>🏋️ Entraînement libre</h2><p class="small muted">Choisis le domaine, la task statement et la difficulté. Pas de cœurs, à ton rythme.</p>' +
+      '<label class="small">Domaine</label><select class="input" id="fWorld"><option value="0">Tous les domaines disponibles</option>' + avail.map(function (w) { return '<option value="' + w.id + '">' + w.emoji + " Domaine " + w.id + "</option>"; }).join("") + "</select>" +
       '<label class="small">Task statement</label><select class="input" id="fTask"></select>' +
       '<div class="grid2"><div><label class="small">Difficulté</label><select class="input" id="fDiff"><option value="">Toutes</option><option value="easy">Easy</option><option value="medium">Medium</option><option value="hard">Hard</option></select></div>' +
       '<div><label class="small">Nombre</label><select class="input" id="fNum"><option>10</option><option>20</option><option value="999">Toutes</option></select></div></div>' +
@@ -593,9 +593,9 @@
   /* =============== Examen blanc =============== */
   S.examIntro = function () {
     var app = A(), plan = E.buildExam(META, app.modules);
-    var miss = plan.missing.map(function (m) { var w = worldOf(m.world); return w.emoji + " Monde " + m.world + " : " + m.have + "/" + m.need; }).join("<br>");
+    var miss = plan.missing.map(function (m) { var w = worldOf(m.world); return w.emoji + " Domaine " + m.world + " : " + m.have + "/" + m.need; }).join("<br>");
     U.modal('<h2>📝 Défi Final</h2>' +
-      (plan.partial ? '<div class="notice">⚠️ Tous les mondes ne sont pas encore disponibles. L\'examen sera <b>partiel</b> : ' + plan.questions.length + ' questions en ' + plan.minutes + " min.<br>" + miss + "</div>" : "") +
+      (plan.partial ? '<div class="notice">⚠️ Tous les domaines ne sont pas encore disponibles. L\'examen sera <b>partiel</b> : ' + plan.questions.length + ' questions en ' + plan.minutes + " min.<br>" + miss + "</div>" : "") +
       "<ul><li><b>" + plan.questions.length + " questions</b>, <b>" + plan.minutes + " minutes</b></li><li>Pas de vies, pas de jokers, pas de correction avant la fin</li><li>Tu peux marquer une question « à revoir » 🚩 et naviguer librement</li><li>Score estimé sur 1000, réussite à <b>700</b></li></ul>" +
       '<p class="small muted">Sur le vrai examen, 15 des 65 questions ne sont pas notées et le score est mis à l\'échelle. Ici, le score est une <b>estimation</b> : 70 % de bonnes réponses ≈ 700.</p>' +
       '<div class="grid2"><button class="btn" id="xNo">Plus tard</button><button class="btn primary" id="xGo">Démarrer ⏱️</button></div>',
@@ -696,9 +696,16 @@
     document.body.classList.remove("fullscreen");
     var sc = L.sc, onlyWrong = false;
     function draw() {
-      var h = '<div class="card center"><h1>' + (sc.passed ? "🎓 Certification obtenue !" : "📚 Pas encore…") + '</h1><div style="font-size:2.6rem;font-weight:800;color:' + (sc.passed ? "var(--ok)" : "var(--ko)") + '">' + sc.score + ' <span class="small muted">/ 1000</span></div>' +
+      var h = '<div class="card center"><h1>' + (sc.passed ? "🎓 Examen blanc réussi !" : "📚 Pas encore…") + '</h1><div style="font-size:2.6rem;font-weight:800;color:' + (sc.passed ? "var(--ok)" : "var(--ko)") + '">' + sc.score + ' <span class="small muted">/ 1000</span></div>' +
         '<p>' + sc.correct + "/" + sc.total + " bonnes réponses (" + pct(sc.pct) + ") · seuil 700</p><p class=\"small muted\">Score estimé (70 % ≈ 700). Le vrai score AWS est mis à l'échelle.</p>" +
         (L.rw.newBadges.length ? "<p>🏅 " + L.rw.newBadges.map(function (id) { var b = META.badges.find(function (x) { return x.id === id; }); return b ? b.emoji + " " + b.name : id; }).join(", ") + "</p>" : "") + "</div>";
+      if (sc.passed) {
+        var me = st().profile;
+        h += '<div class="cert"><div class="cert-top">🎓 CERTIFICAT D\'ENTRAÎNEMENT</div><div class="small muted">décerné à</div><div class="cert-name">' + esc(me.avatar) + " " + esc(me.name) + '</div>' +
+          '<div>pour la réussite d\'un examen blanc<br><b>AWS Certified AI Practitioner (AIF-C01)</b></div>' +
+          '<div class="cert-score">' + sc.score + ' / 1000</div><div class="small muted">' + esc(E.todayStr()) + " · " + sc.total + " questions" + (sc.total < 65 ? " (examen partiel)" : "") + '</div>' +
+          '<div class="small muted" style="margin-top:8px">Simulation d\'entraînement : ce n\'est pas une certification AWS officielle.</div></div>';
+      }
       h += '<div class="card"><h2>Par domaine</h2>' + META.worlds.map(function (w) {
         var m = sc.byModule[w.id]; if (!m) return "";
         var p = m.c / m.a;
@@ -713,7 +720,7 @@
         if (r) { if (q.type === "ordering") qs.order = r.slice(); else if (q.type === "matching") qs.match = r.slice(); else qs.sel = r.slice(); }
         h += '<details class="section"><summary>' + (ok ? "✅" : "❌") + " " + (k + 1) + ". " + (L.flags[k] ? "🚩 " : "") + esc(q.question.slice(0, 70)) + '…</summary><div class="body"><p><b>' + esc(q.question) + "</b></p>" + widgetHTML(q, qs, true) + explanationHTML(q, qs, ok) + "</div></details>";
       });
-      h += '</div><div class="grid2"><button class="btn" id="toStats">📊 Stats</button><button class="btn primary" id="toMap">🗺️ Carte</button></div>';
+      h += '</div><div class="grid2"><button class="btn" id="toStats">📊 Stats</button><button class="btn primary" id="toMap">🧭 Parcours</button></div>';
       setHTML(h);
       $("#ow").onchange = function () { onlyWrong = this.checked; draw(); };
       $("#toMap").onclick = function () { app.go("map"); };
@@ -735,12 +742,12 @@
       '<div class="stat"><b>' + s.stats.answered + '</b><span class="small muted">questions répondues</span></div><div class="stat"><b>' + (s.stats.answered ? pct(s.stats.correct / s.stats.answered) : "—") + '</b><span class="small muted">de réussite globale</span></div></div></div>';
     h += '<div class="card"><h2>🎯 Probabilité de réussite estimée</h2><div style="font-size:2.2rem;font-weight:800;color:' + (prob.probability >= 0.7 ? "var(--ok)" : prob.probability >= 0.4 ? "var(--accent)" : "var(--ko)") + '">' + Math.round(prob.probability * 100) + ' %</div>' +
       '<p class="small">Score attendu : <b>' + Math.round(prob.expected * 100) + ' %</b> de bonnes réponses (il en faut environ 70 %).</p>' +
-      (s.stats.answered < 60 ? '<p class="small muted">🌱 Encore peu de données : l\'estimation reste prudente. Elle montera au fil de tes parties, en particulier quand tu auras joué dans les 5 mondes.</p>' : "") +
+      (s.stats.answered < 60 ? '<p class="small muted">🌱 Encore peu de données : l\'estimation reste prudente. Elle montera au fil de tes parties, en particulier quand tu auras travaillé les 5 domaines.</p>' : "") +
       '<details class="section"><summary>Comment est-ce calculé ?</summary><div class="body small"><ol><li>Pour chaque domaine : ton taux de réussite sur tes 30 dernières réponses.</li><li>Avec peu de réponses, on reste prudent : on mélange ce taux avec 50 %, avec un poids N / (N + 15), où N est ton nombre total de réponses dans le domaine. Un domaine jamais travaillé compte donc pour 50 %.</li><li>On fait la moyenne pondérée selon les poids officiels 20/24/28/14/14.</li><li>On convertit en probabilité avec une courbe en S centrée sur 70 %.</li></ol><p>⚠️ C\'est une <b>estimation</b> pour te guider, pas une garantie : le vrai examen a ses propres questions et un score mis à l\'échelle.</p></div></details></div>';
     var vals = prob.perModule.map(function (p) { return p.rate == null ? 0 : p.rate; });
     h += '<div class="card"><h2>🕸️ Compétences par domaine</h2><div class="center">' + U.radar(vals, META.worlds.map(function (w) { return "D" + w.id; })) + "</div>" +
       prob.perModule.map(function (p) { var w = worldOf(p.world); return '<div class="row small"><span class="grow">' + w.emoji + " D" + w.id + " (" + w.weight + " %)</span><span>" + (p.rate == null ? "pas encore joué" : pct(p.rate) + " sur " + p.n) + "</span></div>"; }).join("") + "</div>";
-    h += '<div class="card"><h2>🗺️ Progression par monde</h2>' + META.worlds.map(function (w) {
+    h += '<div class="card"><h2>🧭 Progression par domaine</h2>' + META.worlds.map(function (w) {
       var lv = app.levels.filter(function (l) { return l.world === w.id; });
       var got = lv.reduce(function (a, l) { return a + ((s.levels[l.id] && s.levels[l.id].stars) || 0); }, 0), passed = lv.filter(function (l) { return s.levels[l.id] && s.levels[l.id].passed; }).length;
       return '<div style="margin:8px 0"><div class="row small"><span class="grow">' + w.emoji + " " + esc(w.name) + "</span><span>" + passed + "/" + lv.length + " niveaux · " + got + '★</span></div><div class="progress"><i style="width:' + passed / lv.length * 100 + '%"></i></div></div>';

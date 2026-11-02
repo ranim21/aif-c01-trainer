@@ -27,3 +27,8 @@ Pour chacun : vérifier sur docs.aws.amazon.com, puis cocher.
 - [ ] **A2A (Agent-to-Agent)** : cité dans la documentation AgentCore Runtime (« popular protocols like MCP and A2A »).
 - [ ] **AgentCore** : la documentation consultée liste aussi Harness, Payments, Optimization et Registry. Le cours ne cite que les composants principaux.
 - [ ] **TP Bedrock** : noms des menus (Playgrounds → Chat, mode Compare) et procédure d'accès aux modèles, qui a changé en 2025.
+
+### Domaine 3
+- [ ] **Prompt caching (Bedrock)** : décrit de façon générique (préfixe de prompt mis en cache, lectures moins chères). Vérifier les modèles compatibles et la durée de vie du cache.
+- [ ] **Bedrock Knowledge Bases** : le TP propose S3 Vectors comme option économique. Vérifier sa disponibilité dans la Région et dans l'assistant de création de la console.
+- [ ] **Paramètres d'inférence** : Top K n'existe pas pour tous les modèles dans Bedrock (cela dépend du fournisseur).

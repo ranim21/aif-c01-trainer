@@ -80,10 +80,10 @@
       var qs = moduleQuestions(modules, w.id);
       var available = qs.length > 0;
       w.tasks.forEach(function (t) {
-        out.push({ id: "w" + w.id + "-" + t.id, world: w.id, kind: "task", task: t.id, title: t.id + " · " + t.fr, available: available && qs.some(function (q) { return q.task === t.id; }) });
+        out.push({ id: "w" + w.id + "-" + t.id, world: w.id, kind: "task", task: t.id, title: "Leçon " + t.id + " · " + t.fr, available: available && qs.some(function (q) { return q.task === t.id; }) });
       });
-      out.push({ id: "w" + w.id + "-mix", world: w.id, kind: "mix", title: "Bonus · Révision mixte", available: available });
-      out.push({ id: "w" + w.id + "-boss", world: w.id, kind: "boss", title: "Boss · " + w.boss.name, available: available });
+      out.push({ id: "w" + w.id + "-mix", world: w.id, kind: "mix", title: "Révision du domaine", available: available });
+      out.push({ id: "w" + w.id + "-boss", world: w.id, kind: "boss", title: w.boss.name, available: available });
     });
     return out;
   }

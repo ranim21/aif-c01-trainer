@@ -1,4 +1,4 @@
-# AWS AI Quest — jeu de préparation à l'AIF-C01
+# AWS AI Quest — jeu de préparation à l'AIF-C01 (thème sobre « cloud » : marine #232f3e + orange #ff9900, vocabulaire Domaine / Leçon / Examen du domaine)
 
 ## Contexte
 - Utilisateur : **débutant**. Examen AWS Certified AI Practitioner (AIF-C01) le **15 décembre 2026**.
