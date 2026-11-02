@@ -41,7 +41,8 @@
       streak: { count: 0, last: null },
       daily: { date: null, count: 0, goalReached: false },
       courseOpened: {}, flashSeen: 0,
-      examInProgress: null
+      examInProgress: null,
+      friends: {}                     // pseudo (minuscules) -> carte de score reçue via un lien d'invitation
     };
   }
   function migrate(s) {
@@ -402,6 +403,61 @@
     }).filter(function (x) { return x.n >= minAttempts; }).sort(function (a, b) { return a.rate - b.rate; });
   }
 
+  /* ---------- Amis : lien-défi sans serveur ----------
+     Le lien contient une « carte de score » encodée (base64url du JSON). Ce n'est pas signé :
+     c'est un jeu entre amis, pas un classement officiel. Tout est validé et borné au décodage. */
+  function fnv(s) { var h = 0x811c9dc5; for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(36); }
+  function b64encode(str) {
+    var b = typeof Buffer !== "undefined" ? Buffer.from(str, "utf8").toString("base64") : btoa(unescape(encodeURIComponent(str)));
+    return b.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  }
+  function b64decode(b) {
+    b = String(b).replace(/-/g, "+").replace(/_/g, "/"); while (b.length % 4) b += "=";
+    return typeof Buffer !== "undefined" ? Buffer.from(b, "base64").toString("utf8") : decodeURIComponent(escape(atob(b)));
+  }
+  function totalStars(state) { return Object.keys(state.levels).reduce(function (a, k) { return a + (state.levels[k].stars || 0); }, 0); }
+  function bestExam(state) { return state.exams.filter(function (e) { return !e.partial; }).reduce(function (a, e) { return Math.max(a, e.score); }, 0); }
+  function scoreCard(state) {
+    return { n: state.profile.name, a: state.profile.avatar, x: state.xp, s: totalStars(state), b: Object.keys(state.badges).length,
+      e: bestExam(state), q: state.stats.answered, d: todayStr() };
+  }
+  function makeInviteCode(state) {
+    var c = scoreCard(state), json = JSON.stringify(c);
+    return b64encode(JSON.stringify({ v: 1, c: c, k: fnv(json) }));
+  }
+  function parseInviteCode(code) {
+    var o;
+    try { o = JSON.parse(b64decode(code)); } catch (e) { return null; }
+    if (!o || o.v !== 1 || !o.c || typeof o.c !== "object") return null;
+    if (fnv(JSON.stringify(o.c)) !== o.k) return null;
+    var c = o.c, num = function (x, max) { x = Math.floor(Number(x)); return isFinite(x) ? clamp(x, 0, max) : 0; };
+    var name = String(c.n || "").replace(/[\u0000-\u001f<>]/g, "").trim().slice(0, 20);
+    var av = Array.from(String(c.a || "🙂")).slice(0, 4).join("");
+    if (!name) return null;
+    return { n: name, a: av, x: num(c.x, 1e7), s: num(c.s, 999), b: num(c.b, 999), e: num(c.e, 1000), q: num(c.q, 1e6),
+      d: /^\d{4}-\d{2}-\d{2}$/.test(c.d) ? c.d : todayStr() };
+  }
+  function addFriend(state, card) {
+    if (!card) return { ok: false, reason: "Lien d'invitation invalide" };
+    if (card.n.toLowerCase() === String(state.profile.name).toLowerCase()) return { ok: false, reason: "C'est ton propre lien 😄" };
+    var key = card.n.toLowerCase(), prev = state.friends[key];
+    state.friends[key] = card;
+    return { ok: true, updated: !!prev };
+  }
+  /* Classement : moi + amis (+ autres profils de l'appareil), trié selon by = "x" (XP), "s" (étoiles) ou "e" (examen) */
+  function leaderboard(state, others, by) {
+    by = by || "x";
+    var me = scoreCard(state); me.me = true;
+    var seen = {}; seen[me.n.toLowerCase()] = true;
+    var rows = [me];
+    (others || []).concat(Object.keys(state.friends).map(function (k) { return state.friends[k]; })).forEach(function (c) {
+      var k = c.n.toLowerCase(); if (seen[k]) return; seen[k] = true; rows.push(c);
+    });
+    rows.sort(function (a, b) { return (b[by] - a[by]) || (b.x - a.x) || a.n.localeCompare(b.n); });
+    rows.forEach(function (r, i) { r.rank = i + 1; r.level = levelFromXp(r.x); });
+    return rows;
+  }
+
   var Engine = {
     BASE_POINTS: BASE_POINTS, PASS: PASS, DAILY_GOAL: DAILY_GOAL, LEITNER_DAYS: LEITNER_DAYS,
     rngFrom: rngFrom, shuffle: shuffle, todayStr: todayStr, dayNum: dayNum, daysBetween: daysBetween, clamp: clamp,
@@ -414,7 +470,8 @@
     applyResult: applyResult, recordAnswer: recordAnswer, dungeonDue: dungeonDue, touchStreak: touchStreak,
     checkBadges: checkBadges, buy: buy,
     examQuotas: examQuotas, buildExam: buildExam, scoreExam: scoreExam,
-    passProbability: passProbability, weakTasks: weakTasks
+    passProbability: passProbability, weakTasks: weakTasks,
+    scoreCard: scoreCard, makeInviteCode: makeInviteCode, parseInviteCode: parseInviteCode, addFriend: addFriend, leaderboard: leaderboard, totalStars: totalStars
   };
   if (typeof module !== "undefined" && module.exports) module.exports = Engine;
   else root.Engine = Engine;

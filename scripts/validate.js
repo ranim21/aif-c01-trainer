@@ -7,7 +7,10 @@ const ROOT = path.join(__dirname, "..");
 const ctx = { window: {} }; vm.createContext(ctx);
 const load = (f) => vm.runInContext(fs.readFileSync(path.join(ROOT, f), "utf8"), ctx, { filename: f });
 load("data/meta.js");
+load("data/objectives.js");
 const META = ctx.window.META;
+const OBJ = META.objectives;
+const objQ = {}, objS = {};
 fs.readdirSync(path.join(ROOT, "data")).filter((f) => /^m\d-.*\.js$/.test(f)).sort().forEach((f) => load("data/" + f));
 
 const errors = [], warnings = [];
@@ -37,6 +40,9 @@ META.worlds.forEach((w) => {
     if (!new RegExp(`^m${w.id}-\\d{3}$`).test(q.id)) err(`${where} : format d'id attendu m${w.id}-NNN`);
     if (q.module !== w.id) err(`${where} : module ${q.module} ≠ ${w.id}`);
     if (!taskIds.includes(q.task)) err(`${where} : task « ${q.task} » inconnue pour le monde ${w.id}`);
+    if (!OBJ[q.obj]) err(`${where} : objectif « ${q.obj} » inconnu (voir data/objectives.js)`);
+    else if (q.obj.slice(0, 3) !== q.task) err(`${where} : objectif ${q.obj} hors de la task ${q.task}`);
+    else objQ[q.obj] = (objQ[q.obj] || 0) + 1;
     if (!TYPES.includes(q.type)) err(`${where} : type invalide « ${q.type} »`);
     if (!DIFFS.includes(q.difficulty)) err(`${where} : difficulté invalide`);
     if (q.style && q.style !== "scenario") err(`${where} : style invalide`);
@@ -65,8 +71,9 @@ META.worlds.forEach((w) => {
     if (q.type === "single") {
       singles++;
       posCount[cor[0]] = (posCount[cor[0]] || 0) + 1;
-      const L = opts.map((o) => o.length), max = Math.max(...L);
-      if (L[cor[0]] === max && L.filter((x) => x === max).length === 1) longest++;
+      // Indice involontaire : la bonne réponse est NETTEMENT la plus longue (≥ 20 % de plus que la suivante)
+      const L = opts.map((o) => o.length), others = L.filter((_, i) => i !== cor[0]);
+      if (L[cor[0]] >= 1.2 * Math.max(...others)) longest++;
     }
     if (q.type === "ordering") {
       if (nO < 3 || nO > 5) err(`${where} : ordering doit avoir 3 à 5 éléments`);
@@ -98,7 +105,7 @@ META.worlds.forEach((w) => {
   if (qs.length < 10) err(`Monde ${w.id} : niveau bonus impossible (< 10 questions)`);
   DIFFS.forEach((d) => { if (!byDiff[d]) warn(`Monde ${w.id} : aucune question ${d}`); });
   TYPES.forEach((t) => { if (!byType[t]) warn(`Monde ${w.id} : aucune question de type ${t}`); });
-  if (singles && longest / singles > 0.4) warn(`Monde ${w.id} : la bonne réponse est la plus longue dans ${Math.round(longest / singles * 100)} % des single (> 40 %)`);
+  if (singles && longest / singles > 0.15) warn(`Monde ${w.id} : la bonne réponse est nettement la plus longue (+20 %) dans ${Math.round(longest / singles * 100)} % des single (> 15 %)`);
   // Positions dans le fichier : informatif seulement, car l'ordre des options est mélangé à chaque affichage (jeu et examen).
   Object.keys(posCount).forEach((p) => { if (singles >= 8 && posCount[p] / singles > 0.6) warn(`Monde ${w.id} : bonne réponse en position ${"ABCD"[p]} dans ${Math.round(posCount[p] / singles * 100)} % des single du fichier`); });
 
@@ -107,7 +114,12 @@ META.worlds.forEach((w) => {
   if (!c) err(`Monde ${w.id} : cours manquant`);
   else {
     taskIds.forEach((t) => { if (!c.sections.some((s) => s.task === t)) err(`Monde ${w.id} : aucune section de cours pour la task ${t}`); });
-    c.sections.forEach((s, i) => { if (!taskIds.includes(s.task)) err(`Monde ${w.id} : section ${i} task inconnue ${s.task}`); if (!s.blocks.length) err(`Monde ${w.id} : section « ${s.title} » vide`); });
+    c.sections.forEach((s, i) => {
+      if (!taskIds.includes(s.task)) err(`Monde ${w.id} : section ${i} task inconnue ${s.task}`);
+      if (!s.blocks.length) err(`Monde ${w.id} : section « ${s.title} » vide`);
+      if (!Array.isArray(s.obj) || !s.obj.length) err(`Monde ${w.id} : section « ${s.title} » sans objectif (obj)`);
+      else s.obj.forEach((o) => { if (!OBJ[o] || o.slice(0, 3) !== s.task) err(`Monde ${w.id} : section « ${s.title} » objectif invalide ${o}`); else objS[o] = (objS[o] || 0) + 1; });
+    });
     if (!c.sections.some((s) => s.blocks.some((b) => b.type === "trap"))) err(`Monde ${w.id} : aucun encadré « Pièges à l'examen »`);
     if (!c.flashcards || c.flashcards.length < 10) warn(`Monde ${w.id} : moins de 10 flashcards`);
     if (/https?:\/\//i.test(JSON.stringify(c))) err(`Monde ${w.id} : URL externe dans le cours`);
@@ -125,9 +137,27 @@ META.worlds.forEach((w) => {
   report.push(`   par task : ${taskIds.map((t) => `${t}=${byTask[t] || 0}`).join("  ")}`);
   report.push(`   par difficulté : ${DIFFS.map((d) => `${d}=${byDiff[d] || 0}`).join("  ")}`);
   report.push(`   par type : ${TYPES.map((t) => `${t}=${byType[t] || 0}`).join("  ")}`);
-  report.push(`   single : bonne réponse la plus longue ${singles ? Math.round(longest / singles * 100) : 0} % · positions ${["A", "B", "C", "D"].map((L, i) => `${L}=${posCount[i] || 0}`).join(" ")}  (affichage mélangé en jeu)`);
+  report.push(`   single : bonne réponse nettement la plus longue ${singles ? Math.round(longest / singles * 100) : 0} % · positions ${["A", "B", "C", "D"].map((L, i) => `${L}=${posCount[i] || 0}`).join(" ")}  (affichage mélangé en jeu)`);
 });
 
+// ===== Couverture du programme officiel =====
+const objIds = Object.keys(OBJ);
+const builtWorlds = META.worlds.filter((w) => ctx.window[w.key]).map((w) => String(w.id));
+let covered = 0;
+const lines = [];
+objIds.forEach((o) => {
+  const ok = (objS[o] || 0) >= 1 && (objQ[o] || 0) >= 2;
+  if (ok) covered++;
+  if (builtWorlds.includes(o[0]) && !ok) err(`Objectif ${o} insuffisamment couvert : ${objS[o] || 0} section(s), ${objQ[o] || 0} question(s) (min 1 et 2) — ${OBJ[o]}`);
+  lines.push(`   ${ok ? "✅" : "⬜"} ${o}  ${objS[o] || 0} sect. · ${objQ[o] || 0} q.`);
+});
+report.push(`\nCouverture du programme officiel : ${covered}/${objIds.length} objectifs (${Math.round(covered / objIds.length * 100)} %)`);
+if (process.argv.includes("--objectives")) report.push(lines.join("\n"));
+// Services in-scope mentionnés dans les cours / questions / exercices
+const corpus = META.worlds.map((w) => JSON.stringify(ctx.window[w.key] || {})).join(" ");
+const missingSvc = META.inScopeServices.filter((s) => !corpus.includes(s));
+report.push(`Services in-scope mentionnés : ${META.inScopeServices.length - missingSvc.length}/${META.inScopeServices.length}` + (missingSvc.length ? ` — manquants : ${missingSvc.join(", ")}` : ""));
+if (builtWorlds.length === META.worlds.length && missingSvc.length) err("Services in-scope jamais mentionnés : " + missingSvc.join(", "));
 console.log("=== Validation du contenu AWS AI Quest ===\n" + report.join("\n"));
 if (warnings.length) console.log("\n⚠️  Avertissements (" + warnings.length + ") :\n - " + warnings.join("\n - "));
 if (errors.length) { console.log("\n❌ Erreurs (" + errors.length + ") :\n - " + errors.join("\n - ")); process.exit(1); }

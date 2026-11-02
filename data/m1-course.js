@@ -4,7 +4,7 @@ window.MODULE_1.course = {
   intro: "Ce monde pose les bases : le vocabulaire de l'IA, les cas d'usage où elle apporte (ou pas) de la valeur, et le cycle de vie d'un projet ML sur AWS. C'est 20 % de l'examen, et tout le reste s'appuie dessus.",
   sections: [
     /* ======================= 1.1 ======================= */
-    { task: "1.1", title: "AI, ML, Deep Learning, GenAI, Agentic AI", blocks: [
+    { task: "1.1", obj: ["1.1.b", "1.1.a"], title: "AI, ML, Deep Learning, GenAI, Agentic AI", blocks: [
       { type: "p", text: "Ces notions s'emboîtent comme des poupées russes. Chaque cercle est un <b>sous-ensemble</b> du précédent." },
       { type: "diagram", id: "nested" },
       { type: "table", head: ["Terme", "Définition simple", "Exemple"], rows: [
@@ -20,7 +20,7 @@ window.MODULE_1.course = {
         "Un LLM n'est pas forcément un agent. Un agent <b>utilise</b> un LLM et y ajoute de la planification, des outils et des actions."
       ]}
     ]},
-    { task: "1.1", title: "Le vocabulaire indispensable", blocks: [
+    { task: "1.1", obj: ["1.1.a"], title: "Le vocabulaire indispensable", blocks: [
       { type: "table", head: ["Terme", "À retenir"], rows: [
         ["<b>Algorithm</b>", "La <i>méthode</i> d'apprentissage (ex. régression linéaire, arbre de décision, réseau de neurones)."],
         ["<b>Model</b>", "Le <i>résultat</i> de l'entraînement : un artefact qui encode ce qui a été appris et fait des prédictions."],
@@ -36,7 +36,7 @@ window.MODULE_1.course = {
       ]},
       { type: "analogy", text: "L'<b>algorithme</b> est la recette, les <b>données</b> sont les ingrédients, le <b>modèle</b> est le plat cuisiné. L'<b>inférence</b>, c'est servir le plat à un nouveau client." }
     ]},
-    { task: "1.1", title: "Fit : underfitting, overfitting, biais et variance", blocks: [
+    { task: "1.1", obj: ["1.1.a"], title: "Fit : underfitting, overfitting, biais et variance", blocks: [
       { type: "diagram", id: "fit" },
       { type: "table", head: ["", "Underfitting", "Good fit", "Overfitting"], rows: [
         ["Training data", "Mauvais", "Bon", "Excellent"],
@@ -50,7 +50,7 @@ window.MODULE_1.course = {
         "« Très bon en entraînement, mauvais en test » : c'est toujours de l'overfitting."
       ]}
     ]},
-    { task: "1.1", title: "Types d'inférence (SageMaker AI)", blocks: [
+    { task: "1.1", obj: ["1.1.c"], title: "Types d'inférence (SageMaker AI)", blocks: [
       { type: "table", head: ["Type", "Quand l'utiliser", "Mot-clé dans l'énoncé"], rows: [
         ["<b>Real-time inference</b>", "Réponse immédiate (millisecondes), trafic régulier, endpoint toujours actif.", "« low latency », « immediately », « interactive »"],
         ["<b>Serverless inference</b>", "Trafic intermittent ou imprévisible. Pas de serveur à gérer, paiement à l'usage. Accepte des <i>cold starts</i>.", "« intermittent traffic », « idle periods », « no infrastructure management »"],
@@ -63,7 +63,7 @@ window.MODULE_1.course = {
         "Serverless : idéal quand le trafic est irrégulier, mais il y a de la latence au démarrage (cold start)."
       ]}
     ]},
-    { task: "1.1", title: "Types de données", blocks: [
+    { task: "1.1", obj: ["1.1.d"], title: "Types de données", blocks: [
       { type: "table", head: ["Catégorie", "Exemples", "À retenir"], rows: [
         ["<b>Labeled</b> (étiquetées)", "Photo + étiquette « chat », e-mail + « spam »", "Nécessaires à l'apprentissage <b>supervisé</b>"],
         ["<b>Unlabeled</b> (non étiquetées)", "Logs bruts, photos sans légende", "Apprentissage <b>non supervisé</b> (ou auto-supervisé)"],
@@ -73,7 +73,7 @@ window.MODULE_1.course = {
       ]},
       { type: "trap", items: ["Un tableau de mesures horodatées est <b>à la fois</b> structuré et une time-series. Lisez bien ce que la question demande."] }
     ]},
-    { task: "1.1", title: "Types d'apprentissage", blocks: [
+    { task: "1.1", obj: ["1.1.e"], title: "Types d'apprentissage", blocks: [
       { type: "table", head: ["Type", "Principe", "Exemples"], rows: [
         ["<b>Supervised</b> (supervisé)", "Apprend à partir d'exemples <b>étiquetés</b> (entrée → bonne réponse).", "Classification (spam ou pas), régression (prix)"],
         ["<b>Unsupervised</b> (non supervisé)", "Trouve des structures dans des données <b>non étiquetées</b>.", "Clustering (segmentation clients), détection d'anomalies"],
@@ -83,7 +83,7 @@ window.MODULE_1.course = {
       { type: "tip", text: "Étiquettes → Supervisé. Pas d'étiquettes → Non supervisé. Récompense → Renforcement." }
     ]},
     /* ======================= 1.2 ======================= */
-    { task: "1.2", title: "Quand l'IA apporte de la valeur… et quand elle n'en apporte pas", blocks: [
+    { task: "1.2", obj: ["1.2.a", "1.2.b"], title: "Quand l'IA apporte de la valeur… et quand elle n'en apporte pas", blocks: [
       { type: "list", title: "L'IA/ML apporte de la valeur pour :", items: [
         "<b>Aider la décision humaine</b> : signaler les dossiers à risque, prioriser.",
         "<b>Passer à l'échelle</b> : traiter des millions de documents, d'images ou d'appels.",
@@ -98,7 +98,7 @@ window.MODULE_1.course = {
       ]},
       { type: "trap", items: ["Si l'énoncé insiste sur « exact », « toujours le même résultat » ou « règles simples connues », la bonne réponse n'est souvent <b>pas</b> le ML."] }
     ]},
-    { task: "1.2", title: "Choisir la bonne technique", blocks: [
+    { task: "1.2", obj: ["1.2.c"], title: "Choisir la bonne technique", blocks: [
       { type: "table", head: ["Technique", "Sortie", "Exemple"], rows: [
         ["<b>Regression</b>", "Une <b>valeur numérique continue</b>", "Prix d'un bien, température, chiffre d'affaires"],
         ["<b>Classification</b> (binaire ou multi-classe)", "Une <b>catégorie</b>", "Fraude oui/non, type de ticket support"],
@@ -109,7 +109,7 @@ window.MODULE_1.course = {
       ]},
       { type: "tip", text: "Combien ? → Regression. Lequel ? → Classification. Quels groupes ? → Clustering. Quand, ou combien demain ? → Forecasting." }
     ]},
-    { task: "1.2", title: "Applications concrètes", blocks: [
+    { task: "1.2", obj: ["1.2.d"], title: "Applications concrètes", blocks: [
       { type: "table", head: ["Domaine", "Exemples"], rows: [
         ["Computer vision", "Contrôle qualité visuel, modération d'images, reconnaissance de visages"],
         ["NLP", "Analyse de sentiment, extraction d'entités, traduction, résumé"],
@@ -121,7 +121,7 @@ window.MODULE_1.course = {
         ["Agentic AI", "Agent qui enchaîne des actions : réserver, vérifier, mettre à jour un ticket"]
       ]}
     ]},
-    { task: "1.2", title: "Les services AWS d'IA managés", blocks: [
+    { task: "1.2", obj: ["1.2.e"], title: "Les services AWS d'IA managés", blocks: [
       { type: "p", text: "Ce sont des services <b>pré-entraînés</b>, appelés par API, qui ne demandent aucune expertise ML. À l'examen, il faut associer chaque besoin au bon service." },
       { type: "table", head: ["Service", "Ce qu'il fait", "Mot-clé"], rows: [
         ["<b>Amazon Transcribe</b>", "Speech-to-text (parole → texte)", "transcription, sous-titres, appels"],
@@ -141,7 +141,7 @@ window.MODULE_1.course = {
         "Lex construit l'interface conversationnelle. Polly fournit seulement la voix."
       ]}
     ]},
-    { task: "1.2", title: "ML traditionnel ou foundation model ?", blocks: [
+    { task: "1.2", obj: ["1.2.f"], title: "ML traditionnel ou foundation model ?", blocks: [
       { type: "table", head: ["Critère", "ML traditionnel (modèle dédié)", "Foundation model (FM / LLM)"], rows: [
         ["Explicabilité", "Plus facile (arbres, régression, importance des variables)", "Difficile (boîte noire de milliards de paramètres)"],
         ["Contraintes réglementaires", "Souvent préféré si chaque décision doit être justifiée (crédit, assurance)", "À utiliser avec prudence, avec garde-fous"],
@@ -152,7 +152,7 @@ window.MODULE_1.course = {
       { type: "trap", items: ["Une décision de crédit réglementée sur des données tabulaires, avec une exigence d'explication : pensez <b>ML traditionnel interprétable</b>, pas LLM."] }
     ]},
     /* ======================= 1.3 ======================= */
-    { task: "1.3", title: "Le pipeline ML de bout en bout", blocks: [
+    { task: "1.3", obj: ["1.3.a"], title: "Le pipeline ML de bout en bout", blocks: [
       { type: "diagram", id: "pipeline" },
       { type: "list", items: [
         "<b>1. Business goal</b> : définir le problème et la métrique de succès.",
@@ -164,7 +164,7 @@ window.MODULE_1.course = {
         "<b>7. Monitoring</b> : surveiller la qualité et la dérive (drift), puis <b>réentraîner</b>. C'est une boucle !"
       ]}
     ]},
-    { task: "1.3", title: "Les briques SageMaker AI et AWS par étape", blocks: [
+    { task: "1.3", obj: ["1.3.d"], title: "Les briques SageMaker AI et AWS par étape", blocks: [
       { type: "table", head: ["Étape", "Service / fonctionnalité", "Rôle"], rows: [
         ["Labeling", "<b>SageMaker Ground Truth</b>", "Étiquetage de données (humains + automatique)"],
         ["Préparation", "<b>SageMaker Data Wrangler</b>, AWS Glue, Glue DataBrew", "Nettoyer et transformer les données (Data Wrangler et DataBrew : sans code ou presque)"],
@@ -185,7 +185,7 @@ window.MODULE_1.course = {
         "Ground Truth sert à <b>étiqueter</b> des données. Ce n'est pas un outil de « vérité » sur les prédictions."
       ]}
     ]},
-    { task: "1.3", title: "Sources de modèles et mise en production", blocks: [
+    { task: "1.3", obj: ["1.3.b", "1.3.c"], title: "Sources de modèles et mise en production", blocks: [
       { type: "table", head: ["Source", "Description"], rows: [
         ["<b>Open source pré-entraîné</b>", "Modèles publics (via SageMaker JumpStart, par ex.) : on les réutilise ou on les fine-tune."],
         ["<b>FM propriétaires managés</b>", "Accessibles via Amazon Bedrock (ex. Amazon Nova et des modèles de fournisseurs tiers)."],
@@ -196,7 +196,7 @@ window.MODULE_1.course = {
         ["<b>Self-hosted API</b> (ex. endpoint SageMaker AI, EC2, EKS)", "Contrôle total (instance, réseau, version du modèle)", "Gestion de la capacité, coût des instances même au repos"]
       ]}
     ]},
-    { task: "1.3", title: "MLOps", blocks: [
+    { task: "1.3", obj: ["1.3.e"], title: "MLOps", blocks: [
       { type: "p", text: "Le MLOps applique les principes DevOps au ML pour passer de l'expérimentation à la production de manière fiable." },
       { type: "list", items: [
         "<b>Experimentation</b> : suivre les essais (paramètres, données, résultats).",
@@ -209,7 +209,7 @@ window.MODULE_1.course = {
       ]},
       { type: "trap", items: ["Un modèle dont la performance baisse <b>des mois après</b> son déploiement : ce n'est pas de l'overfitting, c'est de la <b>dérive</b>. Il faut Model Monitor et un réentraînement."] }
     ]},
-    { task: "1.3", title: "Métriques du modèle et métriques business", blocks: [
+    { task: "1.3", obj: ["1.3.f"], title: "Métriques du modèle et métriques business", blocks: [
       { type: "diagram", id: "confusion" },
       { type: "table", head: ["Métrique", "Formule", "Quand la privilégier"], rows: [
         ["<b>Accuracy</b>", "(TP + TN) / total", "Classes équilibrées. Trompeuse si les classes sont déséquilibrées !"],

@@ -18,3 +18,12 @@ Pour chacun : vérifier sur docs.aws.amazon.com, puis cocher.
 - [ ] **SageMaker AI Asynchronous inference** : gros payloads et traitement long, file d'attente, mise à l'échelle jusqu'à 0 instance. Le cours ne cite volontairement aucune limite chiffrée (taille, durée). Question m1-004.
 - [ ] **SageMaker Serverless inference** : présenté comme limité pour les gros payloads et les traitements longs, sans chiffre. Question m1-004 (option fausse).
 - [ ] **TP console** (m1-lab5 à lab7) : noms exacts des menus de la console (« Real-time analysis » dans Comprehend, « Label detection » dans Rekognition) et conditions actuelles de l'offre gratuite AWS (le programme Free Tier a changé en 2025 : vérifier votre compte).
+
+### Monde 2
+- [ ] **Bedrock batch inference** : présenté comme « prix réduit par rapport à l'on-demand pour les modèles éligibles ». La page de tarification consultée le 2026-11-02 indique « 50 % lower price » pour certains modèles. Le cours ne donne volontairement pas de pourcentage.
+- [ ] **Provisioned Throughput** : facturé à l'heure par unité de modèle, avec ou sans engagement (1 mois ou 6 mois selon les modèles). Le cours dit seulement qu'il est « souvent utilisé pour servir des modèles personnalisés » : vérifier si l'inférence on-demand des modèles personnalisés est désormais possible pour le modèle visé.
+- [ ] **Amazon Nova** : liste exacte des modèles (Micro, Lite, Pro, Premier, Canvas, Reel, Sonic… et éventuelles versions « Nova 2 »). Le cours reste générique.
+- [ ] **AWS Transform** : décrit comme un « service agentique de migration et de modernisation (.NET, mainframe, VMware) », sans source officielle lue.
+- [ ] **A2A (Agent-to-Agent)** : cité dans la documentation AgentCore Runtime (« popular protocols like MCP and A2A »).
+- [ ] **AgentCore** : la documentation consultée liste aussi Harness, Payments, Optimization et Registry. Le cours ne cite que les composants principaux.
+- [ ] **TP Bedrock** : noms des menus (Playgrounds → Chat, mode Compare) et procédure d'accès aux modèles, qui a changé en 2025.

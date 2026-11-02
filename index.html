@@ -18,11 +18,12 @@
 <body>
   <header id="topbar"></header>
   <main id="main" tabindex="-1"><p class="center muted">Chargement…</p></main>
+  <footer id="appver" class="small muted center"></footer>
   <nav id="tabs" aria-label="Navigation principale">
     <button data-tab="map"><span>🗺️</span>Carte</button>
     <button data-tab="stats"><span>📊</span>Stats</button>
     <button data-tab="modes"><span>🎯</span>Modes</button>
-    <button data-tab="shop"><span>🛒</span>Boutique</button>
+    <button data-tab="friends"><span>🏆</span>Classement</button>
     <button data-tab="profile"><span>👤</span>Profil</button>
   </nav>
   <div id="toasts" aria-live="polite"></div>
@@ -30,9 +31,13 @@
   <noscript><p style="padding:20px">Ce jeu nécessite JavaScript.</p></noscript>
 
   <script src="data/meta.js"></script>
+  <script src="data/objectives.js"></script>
   <script src="data/m1-course.js"></script>
   <script src="data/m1-questions.js"></script>
   <script src="data/m1-labs.js"></script>
+  <script src="data/m2-course.js"></script>
+  <script src="data/m2-questions.js"></script>
+  <script src="data/m2-labs.js"></script>
   <script src="js/engine.js"></script>
   <script src="js/storage.js"></script>
   <script src="js/ui.js"></script>

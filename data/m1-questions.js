@@ -5,7 +5,7 @@
 window.MODULE_1 = window.MODULE_1 || {};
 window.MODULE_1.questions = [
   /* ---------------- Task 1.1 ---------------- */
-  { id: "m1-001", module: 1, task: "1.1", type: "single", difficulty: "easy",
+  { id: "m1-001", module: 1, task: "1.1", obj: "1.1.b", type: "single", difficulty: "easy",
     question: "Which statement correctly describes the relationship between artificial intelligence (AI), machine learning (ML), and deep learning?",
     options: ["ML is a subset of deep learning, which is a subset of AI.", "Deep learning is a subset of ML, which is a subset of AI.", "AI is a subset of ML, which is a subset of deep learning.", "AI, ML, and deep learning are independent fields with no overlap."],
     correct: [1],
@@ -13,7 +13,7 @@ window.MODULE_1.questions = [
     wrongExplanations: { "0": "C'est l'inverse : le deep learning est une partie du ML, pas l'inverse.", "2": "L'AI est le cercle le plus large ; elle ne peut pas être incluse dans le ML.", "3": "Ces domaines sont imbriqués, pas indépendants." },
     tip: "Poupées russes : AI ⊃ ML ⊃ Deep Learning ⊃ GenAI." },
 
-  { id: "m1-002", module: 1, task: "1.1", type: "single", difficulty: "easy",
+  { id: "m1-002", module: 1, task: "1.1", obj: "1.1.e", type: "single", difficulty: "easy",
     question: "A company trains a model with thousands of emails that are each tagged as \"spam\" or \"not spam.\" Which type of machine learning is this?",
     options: ["Unsupervised learning", "Reinforcement learning", "Supervised learning", "Transfer learning"],
     correct: [2],
@@ -21,7 +21,7 @@ window.MODULE_1.questions = [
     wrongExplanations: { "0": "Le non supervisé travaille sur des données SANS étiquettes.", "1": "Le renforcement repose sur des récompenses obtenues en agissant dans un environnement, pas sur des exemples étiquetés.", "3": "Le transfer learning réutilise un modèle déjà entraîné. L'énoncé décrit seulement un entraînement sur des données étiquetées." },
     tip: "Étiquettes (labels) = Supervisé." },
 
-  { id: "m1-003", module: 1, task: "1.1", type: "single", style: "scenario", difficulty: "medium",
+  { id: "m1-003", module: 1, task: "1.1", obj: "1.1.c", type: "single", style: "scenario", difficulty: "medium",
     question: "A retailer needs to generate product demand predictions for its entire catalog of 2 million items once every night. No user is waiting for the results. Which Amazon SageMaker AI inference option is MOST appropriate?",
     options: ["Real-time inference", "Batch transform", "Serverless inference", "Asynchronous inference"],
     correct: [1],
@@ -29,7 +29,7 @@ window.MODULE_1.questions = [
     wrongExplanations: { "0": "Le temps réel sert aux réponses immédiates, et l'endpoint resterait actif (et payant) toute la journée pour rien.", "2": "Serverless sert à des requêtes individuelles à trafic intermittent, pas au scoring de millions de lignes en lot.", "3": "L'asynchrone traite des requêtes individuelles qui arrivent au fil de l'eau (gros payloads), pas un dataset complet planifié." },
     tip: "« Nightly » + « entire dataset » = Batch." },
 
-  { id: "m1-004", module: 1, task: "1.1", type: "single", style: "scenario", difficulty: "hard",
+  { id: "m1-004", module: 1, task: "1.1", obj: "1.1.c", type: "single", style: "scenario", difficulty: "hard",
     question: "A media company receives requests at unpredictable times to analyze large video files with an ML model. Each request has a payload of several hundred megabytes and takes several minutes to process. Users can wait for the result, and the company wants to scale to zero instances when there are no requests. Which inference option should the company use?",
     options: ["Real-time inference endpoint", "Serverless inference", "Asynchronous inference", "Batch transform on the full video archive"],
     correct: [2],
@@ -37,7 +37,7 @@ window.MODULE_1.questions = [
     wrongExplanations: { "0": "Le temps réel est conçu pour des réponses rapides et de petits payloads, avec des instances toujours actives.", "1": "Serverless est limité sur la taille du payload et la durée de traitement : ce n'est pas adapté à de longues analyses de vidéos volumineuses.", "3": "Batch transform traite un dataset complet en une fois. Ici, les requêtes arrivent une par une, à des moments imprévisibles." },
     tip: "Gros fichiers + longue attente acceptable = Async (« A » comme Attente)." },
 
-  { id: "m1-005", module: 1, task: "1.1", type: "single", style: "scenario", difficulty: "medium",
+  { id: "m1-005", module: 1, task: "1.1", obj: "1.1.c", type: "single", style: "scenario", difficulty: "medium",
     question: "An internal HR tool calls an ML model only a few times per day at irregular intervals. The team wants to avoid managing instances and pay only when the model is used. Occasional extra latency on the first request is acceptable. Which inference option meets these requirements?",
     options: ["Serverless inference", "Real-time inference on a GPU instance", "Batch transform", "A self-managed model on an always-on Amazon EC2 instance"],
     correct: [0],
@@ -45,7 +45,7 @@ window.MODULE_1.questions = [
     wrongExplanations: { "1": "Un endpoint temps réel sur GPU tourne en permanence : coûteux pour quelques appels par jour.", "2": "Batch transform est fait pour des lots planifiés, pas pour des requêtes ponctuelles d'utilisateurs.", "3": "Une instance EC2 toujours allumée oblige à gérer l'infrastructure, et on paie même au repos." },
     tip: "Irrégulier + « pay per use » + « cold start OK » = Serverless." },
 
-  { id: "m1-006", module: 1, task: "1.1", type: "multiple", difficulty: "easy",
+  { id: "m1-006", module: 1, task: "1.1", obj: "1.1.d", type: "multiple", difficulty: "easy",
     question: "Which of the following are examples of unstructured data? (Select TWO.)",
     options: ["A relational database table of customer orders", "Photos uploaded by users", "A CSV file of daily stock prices with date and price columns", "Free-text customer product reviews", "A spreadsheet of employee salaries by department"],
     correct: [1, 3],
@@ -53,7 +53,7 @@ window.MODULE_1.questions = [
     wrongExplanations: { "0": "Une table relationnelle est le cas typique de donnée structurée (tabulaire).", "2": "Un CSV en colonnes date/prix est structuré (et c'est aussi une time-series).", "4": "Un tableur organisé en colonnes est structuré." },
     tip: "Si ça rentre proprement dans un tableur, c'est structuré." },
 
-  { id: "m1-007", module: 1, task: "1.1", type: "single", difficulty: "easy",
+  { id: "m1-007", module: 1, task: "1.1", obj: "1.1.e", type: "single", difficulty: "easy",
     question: "A warehouse robot learns to navigate by trying different paths and receiving a reward when it reaches the target quickly and a penalty when it hits obstacles. Which type of learning is this?",
     options: ["Supervised learning", "Unsupervised learning", "Self-supervised learning", "Reinforcement learning"],
     correct: [3],
@@ -61,7 +61,7 @@ window.MODULE_1.questions = [
     wrongExplanations: { "0": "Le supervisé suppose des exemples étiquetés avec la bonne réponse, pas des récompenses.", "1": "Le non supervisé cherche des structures dans des données, sans notion de récompense ni d'action.", "2": "L'auto-supervisé fabrique ses propres étiquettes à partir des données (ex. prédire le mot suivant). Il n'y a pas de récompense." },
     tip: "Récompense / pénalité = Renforcement." },
 
-  { id: "m1-008", module: 1, task: "1.1", type: "matching", difficulty: "medium",
+  { id: "m1-008", module: 1, task: "1.1", obj: "1.1.a", type: "matching", difficulty: "medium",
     question: "Match each term to its correct description.",
     options: ["Algorithm", "Model", "Training", "Inference"],
     targets: ["Using a trained model to generate predictions on new data", "The mathematical procedure used to learn patterns from data", "The process of adjusting model parameters by using data", "The artifact that encodes learned patterns and produces predictions"],
@@ -70,7 +70,7 @@ window.MODULE_1.questions = [
     wrongExplanations: { "0": "L'algorithme est la méthode (la recette), pas le résultat.", "1": "Le modèle est le résultat de l'entraînement, celui qui fait les prédictions.", "2": "L'entraînement est le processus d'apprentissage sur les données.", "3": "L'inférence est l'usage du modèle sur des données nouvelles." },
     tip: "Recette (algorithm) → cuisson (training) → plat (model) → service (inference)." },
 
-  { id: "m1-009", module: 1, task: "1.1", type: "single", difficulty: "medium",
+  { id: "m1-009", module: 1, task: "1.1", obj: "1.1.a", type: "single", difficulty: "medium",
     question: "A model achieves 99% accuracy on its training dataset but only 62% accuracy on new, unseen data. What is the MOST likely issue?",
     options: ["The model is underfitting because it has high bias.", "The model is overfitting because it has high variance.", "The model is well balanced between bias and variance.", "The training dataset is too large."],
     correct: [1],
@@ -78,7 +78,7 @@ window.MODULE_1.questions = [
     wrongExplanations: { "0": "L'underfitting donne de mauvais résultats même sur les données d'entraînement, ce qui n'est pas le cas ici.", "2": "Un écart de 37 points entre entraînement et test montre justement un déséquilibre.", "3": "Davantage de données aide plutôt à réduire l'overfitting : ce n'est pas la cause." },
     tip: "Bon en train + mauvais en test = Overfit = high Variance." },
 
-  { id: "m1-010", module: 1, task: "1.1", type: "single", difficulty: "easy",
+  { id: "m1-010", module: 1, task: "1.1", obj: "1.1.d", type: "single", difficulty: "easy",
     question: "A wind farm records the vibration level of each turbine every minute to predict future failures. What type of data is this?",
     options: ["Image data", "Time-series data", "Unstructured text data", "Unlabeled audio data"],
     correct: [1],
@@ -86,15 +86,15 @@ window.MODULE_1.questions = [
     wrongExplanations: { "0": "Il n'y a pas d'images, seulement des valeurs numériques.", "2": "Ce sont des mesures numériques, pas du texte libre.", "3": "Il s'agit de niveaux de vibration chiffrés, pas d'enregistrements audio." },
     tip: "Mesure + horodatage régulier = Time-series." },
 
-  { id: "m1-011", module: 1, task: "1.1", type: "single", difficulty: "hard",
+  { id: "m1-011", module: 1, task: "1.1", obj: "1.1.b", type: "single", difficulty: "hard",
     question: "Which description BEST distinguishes agentic AI from a standard generative AI chatbot?",
-    options: ["Agentic AI only uses reinforcement learning, whereas chatbots only use supervised learning.", "Agentic AI requires models with more parameters than chatbots do.", "Agentic AI can plan multistep tasks, call tools or APIs, and take actions toward a goal with limited human input.", "Agentic AI is a rule-based expert system that does not use machine learning."],
+    options: ["Agentic AI only uses reinforcement learning, whereas chatbots only use supervised learning.", "Agentic AI requires models with more parameters than chatbots do.", "Agentic AI can plan multistep tasks, call tools or APIs, and take actions toward a goal with limited human input.", "Agentic AI is a rule-based expert system that follows fixed if-then rules written by domain experts and does not use machine learning."],
     correct: [2],
     explanation: "Un agent ne se contente pas de répondre : il décompose un objectif en étapes, appelle des outils (API, bases de données), agit, observe le résultat et s'ajuste. Il s'appuie en général sur un LLM.",
     wrongExplanations: { "0": "Les agents s'appuient en général sur des LLM, pas exclusivement sur le reinforcement learning.", "1": "La taille du modèle ne définit pas un agent : ce qui compte, c'est la planification, l'usage d'outils et l'action.", "3": "Les systèmes experts à règles sont l'inverse de l'agentic AI moderne, qui utilise des modèles ML/GenAI." },
     tip: "Agent = Planifie + Outils + Agit." },
 
-  { id: "m1-012", module: 1, task: "1.1", type: "multiple", difficulty: "hard",
+  { id: "m1-012", module: 1, task: "1.1", obj: "1.1.b", type: "multiple", difficulty: "hard",
     question: "Which statements about deep learning are correct? (Select TWO.)",
     options: ["It uses neural networks with many layers.", "It always requires less training data than traditional ML algorithms.", "It can learn useful features automatically from raw unstructured data such as images.", "Its decisions are always fully interpretable by humans.", "It can be applied only to structured tabular data."],
     correct: [0, 2],
@@ -102,7 +102,7 @@ window.MODULE_1.questions = [
     wrongExplanations: { "1": "C'est l'inverse : le deep learning demande généralement BEAUCOUP de données.", "3": "Les réseaux profonds sont souvent des boîtes noires difficiles à interpréter.", "4": "Il excelle justement sur les données non structurées (images, texte, son)." },
     tip: "Deep = beaucoup de couches, beaucoup de données, peu d'explicabilité." },
 
-  { id: "m1-013", module: 1, task: "1.1", type: "single", difficulty: "easy",
+  { id: "m1-013", module: 1, task: "1.1", obj: "1.1.a", type: "single", difficulty: "easy",
     question: "Which field of AI enables systems to identify objects, people, and text in images and videos?",
     options: ["Natural language processing (NLP)", "Speech synthesis", "Computer vision", "Reinforcement learning"],
     correct: [2],
@@ -111,7 +111,7 @@ window.MODULE_1.questions = [
     tip: "Vision = voir." },
 
   /* ---------------- Task 1.2 ---------------- */
-  { id: "m1-014", module: 1, task: "1.2", type: "single", difficulty: "easy",
+  { id: "m1-014", module: 1, task: "1.2", obj: "1.2.c", type: "single", difficulty: "easy",
     question: "A real estate company wants to predict the selling price of houses based on size, location, and number of rooms. Which ML technique should it use?",
     options: ["Clustering", "Binary classification", "Regression", "Dimensionality reduction"],
     correct: [2],
@@ -119,7 +119,7 @@ window.MODULE_1.questions = [
     wrongExplanations: { "0": "Le clustering forme des groupes sans étiquettes. Il ne prédit pas un prix.", "1": "La classification prédit une catégorie (ex. vendu / non vendu), pas un montant.", "3": "La réduction de dimension simplifie les données. Ce n'est pas une technique de prédiction de prix." },
     tip: "« Combien ? » = Régression." },
 
-  { id: "m1-015", module: 1, task: "1.2", type: "single", difficulty: "easy",
+  { id: "m1-015", module: 1, task: "1.2", obj: "1.2.c", type: "single", difficulty: "easy",
     question: "A bank wants to label each credit card transaction as either \"fraudulent\" or \"legitimate\" by using historical labeled transactions. Which ML technique is MOST appropriate?",
     options: ["Binary classification", "Linear regression", "Clustering", "Time-series forecasting"],
     correct: [0],
@@ -127,7 +127,7 @@ window.MODULE_1.questions = [
     wrongExplanations: { "1": "La régression linéaire prédit un nombre continu, pas une catégorie.", "2": "Le clustering n'utilise pas d'étiquettes et ne produit pas directement « fraude / légitime ».", "3": "La prévision de séries temporelles anticipe des valeurs futures (ex. volumes), pas la nature de chaque transaction." },
     tip: "Deux catégories = classification binaire." },
 
-  { id: "m1-016", module: 1, task: "1.2", type: "single", style: "scenario", difficulty: "medium",
+  { id: "m1-016", module: 1, task: "1.2", obj: "1.2.c", type: "single", style: "scenario", difficulty: "medium",
     question: "A retail chain has 3 years of daily sales data for each store and wants to estimate sales for each store for the next 30 days. Which type of ML problem is this?",
     options: ["Clustering", "Time-series forecasting", "Image classification", "Reinforcement learning"],
     correct: [1],
@@ -135,7 +135,7 @@ window.MODULE_1.questions = [
     wrongExplanations: { "0": "Le clustering regrouperait les magasins par similarité, mais ne prédirait pas les ventes futures.", "2": "Il n'y a pas d'images dans ce problème.", "3": "Le renforcement concerne un agent qui agit pour maximiser une récompense, pas la prédiction de ventes." },
     tip: "Données datées + futur = Forecasting." },
 
-  { id: "m1-017", module: 1, task: "1.2", type: "single", difficulty: "easy",
+  { id: "m1-017", module: 1, task: "1.2", obj: "1.2.e", type: "single", difficulty: "easy",
     question: "A contact center wants to convert thousands of recorded customer calls into text so that they can be searched. Which AWS service should it use?",
     options: ["Amazon Polly", "Amazon Transcribe", "Amazon Translate", "Amazon Textract"],
     correct: [1],
@@ -143,7 +143,7 @@ window.MODULE_1.questions = [
     wrongExplanations: { "0": "Polly fait l'inverse : il transforme du texte en parole.", "2": "Translate traduit du texte d'une langue à une autre. Il ne transcrit pas l'audio.", "3": "Textract extrait le texte de documents (images, PDF), pas d'enregistrements audio." },
     tip: "Trans-CRIBE = le scribe qui écrit ce qu'il entend." },
 
-  { id: "m1-018", module: 1, task: "1.2", type: "single", difficulty: "easy",
+  { id: "m1-018", module: 1, task: "1.2", obj: "1.2.e", type: "single", difficulty: "easy",
     question: "An e-commerce company wants to automatically determine whether product reviews are positive, negative, or neutral and to extract the key phrases. Which AWS service meets this requirement with the LEAST development effort?",
     options: ["Amazon Rekognition", "Amazon Lex", "Amazon Comprehend", "Amazon Textract"],
     correct: [2],
@@ -151,7 +151,7 @@ window.MODULE_1.questions = [
     wrongExplanations: { "0": "Rekognition analyse des images et des vidéos, pas le sentiment d'un texte.", "1": "Lex construit des chatbots conversationnels. Il n'analyse pas des avis en masse.", "3": "Textract extrait le texte de documents scannés, mais n'en analyse pas le sentiment." },
     tip: "Comprendre un texte = Comprehend." },
 
-  { id: "m1-019", module: 1, task: "1.2", type: "matching", difficulty: "medium",
+  { id: "m1-019", module: 1, task: "1.2", obj: "1.2.e", type: "matching", difficulty: "medium",
     question: "Match each AWS service to the capability it provides.",
     options: ["Amazon Polly", "Amazon Lex", "Amazon Translate", "Amazon Transcribe", "Amazon Rekognition"],
     targets: ["Convert speech to text", "Analyze images and videos", "Convert text to lifelike speech", "Build conversational chatbots and voice bots", "Translate text between languages"],
@@ -160,15 +160,15 @@ window.MODULE_1.questions = [
     wrongExplanations: { "0": "Polly génère de la parole à partir de texte.", "1": "Lex sert à créer des bots conversationnels (intents, slots).", "2": "Translate traduit du texte.", "3": "Transcribe transcrit l'audio en texte.", "4": "Rekognition analyse le contenu visuel." },
     tip: "Polly le perroquet parle ; Transcribe le scribe écrit." },
 
-  { id: "m1-020", module: 1, task: "1.2", type: "single", style: "scenario", difficulty: "hard",
+  { id: "m1-020", module: 1, task: "1.2", obj: "1.2.f", type: "single", style: "scenario", difficulty: "hard",
     question: "A bank must approve or reject loan applications by using structured applicant data. Regulators require the bank to explain the specific factors behind each individual decision. Which approach is MOST appropriate?",
-    options: ["Use a large language model in Amazon Bedrock and ask it to approve or reject each application.", "Train an interpretable traditional ML model, such as a decision tree or logistic regression, by using Amazon SageMaker AI.", "Use a diffusion model to generate synthetic decisions for each applicant.", "Use clustering to group applicants and approve the largest cluster."],
+    options: ["Use a large language model in Amazon Bedrock, include each application in the prompt, and ask the model to approve or reject it with a short justification.", "Train an interpretable traditional ML model, such as a decision tree or logistic regression, by using Amazon SageMaker AI.", "Use a diffusion model to generate synthetic decisions for each applicant.", "Use clustering to group applicants and approve the largest cluster."],
     correct: [1],
     explanation: "Données tabulaires, décision de classification, exigence réglementaire d'explication : un modèle ML traditionnel interprétable est le meilleur choix. Ses facteurs de décision peuvent être expliqués, par exemple avec SageMaker Clarify.",
     wrongExplanations: { "0": "Un LLM est une boîte noire, non déterministe et difficile à justifier devant un régulateur pour une décision de crédit.", "2": "Un modèle de diffusion génère des images. Il est hors sujet ici.", "3": "Le clustering n'est pas supervisé et ne produit pas de décision justifiable individuellement." },
     tip: "Régulation + explication + données tabulaires = ML traditionnel interprétable." },
 
-  { id: "m1-021", module: 1, task: "1.2", type: "multiple", difficulty: "medium",
+  { id: "m1-021", module: 1, task: "1.2", obj: "1.2.a", type: "multiple", difficulty: "medium",
     question: "In which situations does AI/ML typically provide business value? (Select TWO.)",
     options: ["Processing millions of documents faster than a human team could", "Guaranteeing 100% accurate outcomes for every prediction", "Assisting human reviewers by flagging high-risk insurance claims", "Eliminating the need for any historical data", "Replacing a simple fixed formula that always gives the exact required answer"],
     correct: [0, 2],
@@ -176,7 +176,7 @@ window.MODULE_1.questions = [
     wrongExplanations: { "1": "Un modèle ML est probabiliste : il ne garantit jamais 100 % d'exactitude.", "3": "Le ML a justement besoin de données pour apprendre.", "4": "Si une formule fixe donne déjà le résultat exact, le ML ajoute du coût et de l'incertitude sans bénéfice." },
     tip: "Valeur de l'IA = Échelle + Aide à la décision + Automatisation." },
 
-  { id: "m1-022", module: 1, task: "1.2", type: "single", difficulty: "medium",
+  { id: "m1-022", module: 1, task: "1.2", obj: "1.2.e", type: "single", difficulty: "medium",
     question: "An online store wants to show each visitor personalized product recommendations based on their browsing and purchase history, without building ML models from scratch. Which AWS service should it use?",
     options: ["Amazon Personalize", "Amazon Comprehend", "Amazon Rekognition", "Amazon SageMaker Ground Truth"],
     correct: [0],
@@ -184,7 +184,7 @@ window.MODULE_1.questions = [
     wrongExplanations: { "1": "Comprehend analyse du texte (sentiment, entités). Il ne fait pas de recommandations.", "2": "Rekognition analyse des images et des vidéos.", "3": "Ground Truth sert à étiqueter des données d'entraînement, pas à recommander des produits." },
     tip: "Personalize = « pour vous, personnellement »." },
 
-  { id: "m1-023", module: 1, task: "1.2", type: "single", style: "scenario", difficulty: "medium",
+  { id: "m1-023", module: 1, task: "1.2", obj: "1.2.c", type: "single", style: "scenario", difficulty: "medium",
     question: "A news company has 500,000 articles with no category labels. It wants to discover groups of articles that cover similar topics, but it does not know the topics in advance. Which technique should it use?",
     options: ["Multi-class classification", "Regression", "Clustering", "Reinforcement learning"],
     correct: [2],
@@ -192,7 +192,7 @@ window.MODULE_1.questions = [
     wrongExplanations: { "0": "La classification exige des catégories prédéfinies et des exemples étiquetés.", "1": "La régression prédit une valeur numérique.", "3": "Le renforcement ne sert pas à regrouper des documents." },
     tip: "Pas de labels + « découvrir des groupes » = Clustering." },
 
-  { id: "m1-024", module: 1, task: "1.2", type: "multiple", difficulty: "hard",
+  { id: "m1-024", module: 1, task: "1.2", obj: "1.2.b", type: "multiple", difficulty: "hard",
     question: "A company is evaluating whether to use ML for a new project. In which situations would ML MOST likely NOT be the right choice? (Select TWO.)",
     options: ["The expected cost to build and maintain the model exceeds the expected business benefit.", "The patterns in the data are complex and change over time.", "The business requires an exact, deterministic result that can be computed with simple known rules.", "The company has years of high-quality historical data.", "The task must scale to millions of requests per day."],
     correct: [0, 2],
@@ -200,7 +200,7 @@ window.MODULE_1.questions = [
     wrongExplanations: { "1": "Des motifs complexes et changeants sont justement un bon cas d'usage du ML.", "3": "Beaucoup de données de qualité est une condition favorable au ML.", "4": "Le passage à l'échelle est un avantage classique de l'IA." },
     tip: "Pas de ML si : coût > bénéfice, ou résultat exact exigé." },
 
-  { id: "m1-025", module: 1, task: "1.2", type: "single", difficulty: "medium",
+  { id: "m1-025", module: 1, task: "1.2", obj: "1.2.e", type: "single", difficulty: "medium",
     question: "An accounting team receives scanned invoices and wants to automatically extract printed and handwritten text, key-value pairs from forms, and data from tables. Which AWS service should it use?",
     options: ["Amazon Comprehend", "Amazon Textract", "Amazon Rekognition", "Amazon Transcribe"],
     correct: [1],
@@ -208,24 +208,24 @@ window.MODULE_1.questions = [
     wrongExplanations: { "0": "Comprehend analyse du texte déjà numérique. Il ne lit pas des documents scannés.", "2": "Rekognition peut détecter du texte dans une image, mais il n'est pas conçu pour extraire la structure des formulaires et des tableaux.", "3": "Transcribe convertit de l'audio, pas des documents." },
     tip: "Formulaires + tableaux scannés = Textract." },
 
-  { id: "m1-026", module: 1, task: "1.2", type: "single", style: "scenario", difficulty: "hard",
+  { id: "m1-026", module: 1, task: "1.2", obj: "1.2.e", type: "single", style: "scenario", difficulty: "hard",
     question: "A clinic wants customers to book appointments by phone through a virtual agent that understands spoken requests, asks follow-up questions to collect the date and time, and answers with a natural-sounding voice. Which AWS service is the core of this solution?",
-    options: ["Amazon Polly, because it converts the bot's text replies into speech", "Amazon Lex, because it provides speech recognition and language understanding for conversational bots", "Amazon Comprehend, because it detects the intent of each sentence", "Amazon Translate, because it converts spoken requests into text"],
+    options: ["Amazon Polly, because it converts the bot's text replies into natural-sounding speech for the caller", "Amazon Lex, because it provides speech recognition and language understanding for conversational bots", "Amazon Comprehend, because it detects the intent and the key phrases of each sentence that the customer speaks", "Amazon Translate, because it converts spoken requests into text"],
     correct: [1],
     explanation: "Amazon Lex est le cœur d'un bot conversationnel : il reconnaît la parole, comprend l'intention (intent), collecte les informations manquantes (slots) et gère le dialogue. Polly peut ensuite fournir la voix, mais ce n'est qu'une brique.",
     wrongExplanations: { "0": "Polly ne fait que la synthèse vocale. Il ne comprend pas les demandes et ne gère pas le dialogue.", "2": "Comprehend analyse du texte, mais ne gère pas de conversation avec relances.", "3": "Translate traduit du texte. Il ne convertit pas la parole en texte (c'est le rôle de Transcribe)." },
     tip: "Dialogue avec intents et slots = Lex." },
 
-  { id: "m1-027", module: 1, task: "1.2", type: "single", difficulty: "medium",
+  { id: "m1-027", module: 1, task: "1.2", obj: "1.2.d", type: "single", difficulty: "medium",
     question: "Employees want to ask questions in natural language and get answers based on the company's internal HR policy documents. Which type of AI application does this describe?",
-    options: ["A fraud detection system", "A knowledge base question-answering assistant", "A demand forecasting model", "A computer vision inspection system"],
+    options: ["A fraud detection system", "A knowledge base question-answering assistant", "A demand forecasting model", "A computer vision system that inspects scanned policy pages"],
     correct: [1],
     explanation: "Répondre en langage naturel à partir des documents internes de l'entreprise, c'est une application de type base de connaissances (souvent construite avec la GenAI et le RAG, vus au Monde 3).",
     wrongExplanations: { "0": "La détection de fraude repère des transactions suspectes.", "2": "La prévision anticipe des valeurs futures (ventes, stocks).", "3": "La vision par ordinateur analyse des images." },
     tip: "Questions + documents internes = Knowledge base." },
 
   /* ---------------- Task 1.3 ---------------- */
-  { id: "m1-028", module: 1, task: "1.3", type: "ordering", difficulty: "medium",
+  { id: "m1-028", module: 1, task: "1.3", obj: "1.3.a", type: "ordering", difficulty: "medium",
     question: "Place the following stages of an ML pipeline in the correct order.",
     options: ["Model training", "Data collection", "Deployment and monitoring", "Data preparation and feature engineering", "Model evaluation"],
     correct: [1, 3, 0, 4, 2],
@@ -233,7 +233,7 @@ window.MODULE_1.questions = [
     wrongExplanations: { "0": "L'entraînement vient après la préparation des données : un modèle ne s'entraîne pas sur des données brutes non nettoyées.", "1": "Tout commence par la collecte : sans données, rien à préparer.", "2": "Le déploiement et la surveillance arrivent en dernier, une fois le modèle validé.", "3": "La préparation suit la collecte et précède l'entraînement.", "4": "L'évaluation vérifie le modèle entraîné AVANT de le déployer." },
     tip: "Collecter → Préparer → Entraîner → Évaluer → Déployer (« CPEED »)." },
 
-  { id: "m1-029", module: 1, task: "1.3", type: "matching", difficulty: "hard",
+  { id: "m1-029", module: 1, task: "1.3", obj: "1.3.d", type: "matching", difficulty: "hard",
     question: "Match each Amazon SageMaker AI feature to the ML pipeline task it supports.",
     options: ["SageMaker Ground Truth", "SageMaker Data Wrangler", "SageMaker Feature Store", "SageMaker Model Registry", "SageMaker Model Monitor"],
     targets: ["Catalog, version, and approve models before deployment", "Detect data and model quality drift in production", "Label training data", "Store, share, and reuse features across teams", "Prepare and transform data with little or no code"],
@@ -242,7 +242,7 @@ window.MODULE_1.questions = [
     wrongExplanations: { "0": "Ground Truth sert au labeling de données.", "1": "Data Wrangler sert à préparer et transformer les données.", "2": "Feature Store stocke et partage les features.", "3": "Model Registry versionne et approuve les modèles.", "4": "Model Monitor surveille la dérive en production." },
     tip: "Suivez le pipeline : Label → Prepare → Features → Register → Monitor." },
 
-  { id: "m1-030", module: 1, task: "1.3", type: "single", style: "scenario", difficulty: "medium",
+  { id: "m1-030", module: 1, task: "1.3", obj: "1.3.f", type: "single", style: "scenario", difficulty: "medium",
     question: "A hospital uses a model to detect a serious disease. Missing a sick patient (a false negative) is far more costly than wrongly flagging a healthy patient for an extra test. Which metric should the team prioritize?",
     options: ["Precision", "Recall", "Accuracy", "Mean absolute error (MAE)"],
     correct: [1],
@@ -250,15 +250,15 @@ window.MODULE_1.questions = [
     wrongExplanations: { "0": "La precision limite les faux POSITIFS (fausses alertes), alors que le risque principal ici est le faux négatif.", "2": "L'accuracy peut rester élevée même si l'on rate des malades, surtout si la maladie est rare.", "3": "La MAE sert aux modèles de régression, pas à la classification." },
     tip: "Recall = « Rien ne doit m'échapper »." },
 
-  { id: "m1-031", module: 1, task: "1.3", type: "single", difficulty: "hard",
+  { id: "m1-031", module: 1, task: "1.3", obj: "1.3.f", type: "single", difficulty: "hard",
     question: "In a dataset, 99% of transactions are legitimate and 1% are fraudulent. A model predicts \"legitimate\" for every transaction and reports 99% accuracy. What is the BEST way to evaluate the model instead?",
-    options: ["Keep using accuracy because 99% is an excellent result.", "Use the F1 score, which balances precision and recall for the minority class.", "Use the mean squared error of the predictions.", "Use the training time of the model."],
+    options: ["Keep using accuracy, because a 99% result on a large dataset is an excellent and reliable outcome.", "Use the F1 score, which balances precision and recall for the minority class.", "Use the mean squared error of the predictions.", "Use the training time of the model."],
     correct: [1],
     explanation: "Avec des classes très déséquilibrées, l'accuracy est trompeuse : le modèle ne détecte AUCUNE fraude. Le F1 score combine precision et recall et révèle ce problème (ici, son F1 sur la classe fraude est nul).",
     wrongExplanations: { "0": "Ces 99 % cachent un modèle inutile qui rate 100 % des fraudes.", "2": "La MSE est une métrique de régression, inadaptée à une classification.", "3": "Le temps d'entraînement ne mesure pas la qualité des prédictions." },
     tip: "Classes déséquilibrées → méfiez-vous de l'accuracy, regardez F1, precision et recall." },
 
-  { id: "m1-032", module: 1, task: "1.3", type: "single", difficulty: "medium",
+  { id: "m1-032", module: 1, task: "1.3", obj: "1.3.f", type: "single", difficulty: "medium",
     question: "What does the precision metric measure for a binary classification model?",
     options: ["Of all actual positive cases, the proportion the model correctly identified", "Of all cases the model predicted as positive, the proportion that are actually positive", "The proportion of all predictions that are correct", "The harmonic mean of recall and accuracy"],
     correct: [1],
@@ -266,7 +266,7 @@ window.MODULE_1.questions = [
     wrongExplanations: { "0": "C'est la définition du recall : TP / (TP + FN).", "2": "C'est la définition de l'accuracy.", "3": "Le F1 est la moyenne harmonique de precision et recall, pas de recall et accuracy." },
     tip: "Precision : on regarde la colonne « prédit positif »." },
 
-  { id: "m1-033", module: 1, task: "1.3", type: "multiple", difficulty: "medium",
+  { id: "m1-033", module: 1, task: "1.3", obj: "1.3.e", type: "multiple", difficulty: "medium",
     question: "Which practices are core principles of MLOps? (Select TWO.)",
     options: ["Automating repeatable training and deployment workflows, for example with Amazon SageMaker Pipelines", "Deploying a model once and never updating it, to avoid risk", "Monitoring models in production and retraining them when performance degrades", "Running production training manually from personal notebooks", "Skipping version control for data and models to move faster"],
     correct: [0, 2],
@@ -274,15 +274,15 @@ window.MODULE_1.questions = [
     wrongExplanations: { "1": "Les données changent : un modèle jamais mis à jour se dégrade (drift).", "3": "Les étapes manuelles dans des notebooks personnels créent de la dette technique et ne sont pas reproductibles.", "4": "Le versionnage des données et des modèles est essentiel pour la traçabilité et le rollback." },
     tip: "MLOps = Automatiser + Versionner + Surveiller + Réentraîner." },
 
-  { id: "m1-034", module: 1, task: "1.3", type: "single", style: "scenario", difficulty: "hard",
+  { id: "m1-034", module: 1, task: "1.3", obj: "1.3.e", type: "single", style: "scenario", difficulty: "hard",
     question: "A model performed well at launch. Six months later, its prediction quality has dropped because customer purchasing behavior has changed. Which approach BEST addresses this issue?",
-    options: ["Use Amazon SageMaker Model Monitor to detect the drift, and retrain the model on recent data.", "Use Amazon SageMaker Ground Truth to relabel the original training dataset.", "Move the endpoint to a larger instance type to improve accuracy.", "Use AWS CloudTrail to find which API calls reduced the model accuracy."],
+    options: ["Use Amazon SageMaker Model Monitor to detect the drift, and retrain the model on recent data.", "Use Amazon SageMaker Ground Truth to relabel the original training dataset with a larger team of human annotators.", "Move the endpoint to a larger instance type to improve accuracy.", "Use AWS CloudTrail to find which API calls reduced the model accuracy."],
     correct: [0],
     explanation: "Les données de production ont dérivé par rapport aux données d'entraînement (data/concept drift). Model Monitor détecte cette dérive, et un réentraînement sur des données récentes corrige le problème.",
     wrongExplanations: { "1": "Réétiqueter les anciennes données ne reflète pas le nouveau comportement des clients.", "2": "Une instance plus grande améliore la vitesse ou le débit, pas la justesse des prédictions.", "3": "CloudTrail trace les appels d'API pour l'audit. Il n'analyse pas la qualité d'un modèle." },
     tip: "Baisse de qualité dans le temps = Drift → Model Monitor + réentraînement." },
 
-  { id: "m1-035", module: 1, task: "1.3", type: "single", style: "scenario", difficulty: "hard",
+  { id: "m1-035", module: 1, task: "1.3", obj: "1.3.c", type: "single", style: "scenario", difficulty: "hard",
     question: "A startup wants to add text generation to its application by using a foundation model. It does not want to provision or manage any infrastructure and wants to pay based on usage. Which approach meets these requirements?",
     options: ["Deploy an open-source model on Amazon EC2 instances managed by the team", "Call a foundation model through the Amazon Bedrock managed API", "Train a new foundation model from scratch with Amazon SageMaker AI", "Host the model on an Amazon EKS cluster with GPU nodes"],
     correct: [1],
@@ -290,7 +290,7 @@ window.MODULE_1.questions = [
     wrongExplanations: { "0": "Le self-hosting sur EC2 oblige à gérer les instances, la mise à l'échelle et les correctifs.", "2": "Entraîner un FM de zéro est extrêmement coûteux et long : c'est l'opposé du besoin.", "3": "Un cluster EKS avec GPU est une infrastructure à gérer et à payer même au repos." },
     tip: "Pas d'infra + paiement à l'usage + FM = Bedrock." },
 
-  { id: "m1-036", module: 1, task: "1.3", type: "single", difficulty: "medium",
+  { id: "m1-036", module: 1, task: "1.3", obj: "1.3.b", type: "single", difficulty: "medium",
     question: "A data science team wants to quickly browse pre-trained open-source models, including foundation models, and deploy one to an endpoint in Amazon SageMaker AI with minimal setup. Which feature should it use?",
     options: ["Amazon SageMaker Ground Truth", "Amazon SageMaker JumpStart", "Amazon SageMaker Model Monitor", "Amazon SageMaker Data Wrangler"],
     correct: [1],
@@ -298,7 +298,7 @@ window.MODULE_1.questions = [
     wrongExplanations: { "0": "Ground Truth sert à étiqueter des données.", "2": "Model Monitor surveille des modèles déjà déployés.", "3": "Data Wrangler prépare des données. Il ne propose pas de modèles pré-entraînés." },
     tip: "JumpStart = « démarrer d'un bond » avec un modèle tout prêt." },
 
-  { id: "m1-037", module: 1, task: "1.3", type: "multiple", difficulty: "hard",
+  { id: "m1-037", module: 1, task: "1.3", obj: "1.3.f", type: "multiple", difficulty: "hard",
     question: "A product manager wants to know whether a deployed recommendation model is worth its investment. Which metrics are business metrics rather than model performance metrics? (Select TWO.)",
     options: ["F1 score", "Return on investment (ROI)", "Area under the ROC curve (AUC)", "Cost per user", "Recall"],
     correct: [1, 3],
@@ -306,7 +306,7 @@ window.MODULE_1.questions = [
     wrongExplanations: { "0": "Le F1 est une métrique technique de classification.", "2": "L'AUC mesure la capacité de séparation d'un classifieur : c'est technique.", "4": "Le recall est une métrique technique (taux de positifs détectés)." },
     tip: "Business = argent, coûts, satisfaction. Technique = matrice de confusion." },
 
-  { id: "m1-038", module: 1, task: "1.3", type: "single", difficulty: "medium",
+  { id: "m1-038", module: 1, task: "1.3", obj: "1.3.d", type: "single", difficulty: "medium",
     question: "A development team wants an AI-powered IDE from AWS that turns a feature request into requirements, a design, and a list of implementation tasks before generating code (spec-driven development). Which tool should it use?",
     options: ["Amazon Quick", "Kiro", "Amazon SageMaker Canvas", "Amazon Polly"],
     correct: [1],
@@ -314,11 +314,69 @@ window.MODULE_1.questions = [
     wrongExplanations: { "0": "Amazon Quick s'adresse aux utilisateurs métier (BI, recherche, automatisation), pas au développement de code.", "2": "SageMaker Canvas permet de créer des modèles ML sans code. Ce n'est pas un IDE de développement logiciel.", "3": "Polly fait de la synthèse vocale." },
     tip: "Kiro = IDE pour développeurs ; Quick = espace de travail pour le métier." },
 
-  { id: "m1-039", module: 1, task: "1.3", type: "single", difficulty: "medium",
+  { id: "m1-039", module: 1, task: "1.3", obj: "1.3.d", type: "single", difficulty: "medium",
     question: "Business analysts with no coding skills want to ask questions about company data in natural language, build dashboards, and automate repetitive workflows by using AI agents. Which AWS service is designed for this?",
     options: ["Kiro", "Amazon SageMaker AI training jobs", "Amazon Quick", "Amazon Lex"],
     correct: [2],
     explanation: "Amazon Quick est un espace de travail agentique pour les équipes métier : BI conversationnelle et tableaux de bord (successeur de QuickSight), recherche et automatisation de workflows.",
     wrongExplanations: { "0": "Kiro est un IDE pour développeurs.", "1": "Les training jobs SageMaker AI servent à entraîner des modèles et demandent des compétences ML.", "3": "Lex sert à construire des chatbots. Ce n'est pas un outil d'analyse de données métier." },
-    tip: "Quick = rapide pour le métier : questions, dashboards, automatisations." }
+    tip: "Quick = rapide pour le métier : questions, dashboards, automatisations." },
+
+  /* ---------------- Compléments de couverture ---------------- */
+  { id: "m1-040", module: 1, task: "1.2", obj: "1.2.a", type: "single", style: "scenario", difficulty: "medium",
+    question: "An insurance company receives 50,000 claims per day. Human adjusters cannot review every claim in detail. How can ML provide the MOST value in this situation?",
+    options: ["Score each claim for fraud risk so adjusters can focus their reviews on the riskiest claims", "Replace all adjusters and automatically reject every claim the model is unsure about", "Guarantee that no fraudulent claim is ever paid", "Store the claims in a database for future reference"],
+    correct: [0],
+    explanation: "Le ML apporte ici de la valeur par l'aide à la décision humaine et le passage à l'échelle : il priorise les dossiers, et les humains gardent la décision sur les cas à risque.",
+    wrongExplanations: { "1": "Rejeter automatiquement les cas incertains serait injuste et risqué. Le ML doit aider la décision, pas supprimer tout contrôle humain.", "2": "Aucun modèle probabiliste ne peut garantir zéro fraude.", "3": "Stocker des données n'est pas une application de ML." },
+    tip: "Valeur du ML = prioriser et assister l'humain à grande échelle." },
+
+  { id: "m1-041", module: 1, task: "1.2", obj: "1.2.b", type: "single", style: "scenario", difficulty: "hard",
+    question: "A small business processes about 20 refund requests per month. Each refund follows three fixed rules that never change. A consultant proposes training a custom ML model. What is the BEST recommendation?",
+    options: ["Train a deep learning model on the historical refunds, because it will learn the rules more accurately than code", "Collect several years of data before deciding", "Use a foundation model to decide each refund", "Implement the three rules in simple code, because ML would add cost and uncertainty without benefit"],
+    correct: [3],
+    explanation: "Faible volume, règles fixes et connues, résultat déterministe attendu : l'analyse coût/bénéfice est défavorable au ML. Une simple règle codée est moins chère, exacte et explicable.",
+    wrongExplanations: { "0": "Un modèle ne peut pas faire mieux que des règles exactes qui ne changent jamais, et il coûterait cher à construire et à maintenir.", "1": "Attendre des années de données n'a aucun sens quand les règles sont déjà connues.", "2": "Un FM est non déterministe et coûteux pour appliquer trois règles fixes." },
+    tip: "Règles simples et fixes + petit volume → pas de ML." },
+
+  { id: "m1-042", module: 1, task: "1.2", obj: "1.2.d", type: "matching", difficulty: "medium",
+    question: "Match each business scenario to the type of AI application it represents.",
+    options: ["A bank flags unusual card transactions in real time", "A streaming service suggests movies to each subscriber", "A utility predicts electricity demand for next week", "A factory camera detects scratches on products"],
+    targets: ["Computer vision", "Forecasting", "Fraud detection", "Recommendation system"],
+    correct: [2, 3, 1, 0],
+    explanation: "Transactions inhabituelles = détection de fraude. Suggestions personnalisées = recommandation. Demande future = forecasting. Défauts visibles sur une caméra = computer vision.",
+    wrongExplanations: { "0": "Repérer des transactions anormales, c'est de la détection de fraude (anomalies).", "1": "Proposer du contenu personnalisé, c'est un système de recommandation.", "2": "Prédire une valeur future dans le temps, c'est du forecasting.", "3": "Analyser des images de produits, c'est de la computer vision." },
+    tip: "Associez le verbe : repérer (fraude), suggérer (reco), prévoir (forecast), voir (CV)." },
+
+  { id: "m1-043", module: 1, task: "1.2", obj: "1.2.f", type: "multiple", difficulty: "hard",
+    question: "A company must choose between a traditional ML model and a foundation model (FM). Which situations favor a traditional ML model? (Select TWO.)",
+    options: ["Strict regulatory requirements to explain each prediction on tabular data", "Generating marketing copy in 10 languages", "Very low latency and low cost per prediction on a narrow, well-defined task", "Summarizing long free-text documents", "Building a conversational assistant that answers open-ended questions"],
+    correct: [0, 2],
+    explanation: "Le ML traditionnel est préférable quand l'explicabilité est réglementaire, et pour des tâches étroites sur données structurées qui demandent une latence et un coût minimaux.",
+    wrongExplanations: { "1": "Générer du texte multilingue est un cas typique de FM (GenAI).", "3": "Résumer du texte libre est une tâche de FM.", "4": "Un assistant conversationnel ouvert repose sur un FM / LLM." },
+    tip: "Tabulaire + explication + latence/coût minimaux → ML traditionnel. Langage ouvert → FM." },
+
+  { id: "m1-044", module: 1, task: "1.3", obj: "1.3.a", type: "single", difficulty: "easy",
+    question: "In an ML pipeline, what is the main purpose of the feature engineering step?",
+    options: ["To deploy the model to a production endpoint", "To transform raw data into input variables that help the model learn", "To measure the model's accuracy on unseen data", "To collect feedback from end users after the model is deployed to production"],
+    correct: [1],
+    explanation: "Le feature engineering transforme les données brutes en variables utiles (features) pour l'apprentissage, par exemple extraire le jour de la semaine d'une date.",
+    wrongExplanations: { "0": "Le déploiement est une étape ultérieure.", "2": "Mesurer la performance, c'est l'étape d'évaluation.", "3": "Le feedback utilisateur relève du monitoring après le déploiement." },
+    tip: "Feature = variable d'entrée fabriquée à partir des données brutes." },
+
+  { id: "m1-045", module: 1, task: "1.3", obj: "1.3.b", type: "single", style: "scenario", difficulty: "medium",
+    question: "A company has a limited budget and wants a model that understands general English text for a classification task. It has only 2,000 labeled examples. Which source of model is MOST cost-effective?",
+    options: ["Train a new language model from scratch on the 2,000 examples", "Start from an open-source pre-trained model and fine-tune it on the labeled examples", "Hire annotators to label 10 million additional documents before choosing any model", "Write a rule-based system for every possible sentence"],
+    correct: [1],
+    explanation: "Un modèle pré-entraîné connaît déjà la langue. Le fine-tuner sur 2 000 exemples étiquetés (transfer learning) est bien moins cher et plus efficace que d'entraîner un modèle de zéro.",
+    wrongExplanations: { "0": "2 000 exemples sont très insuffisants pour entraîner un modèle de langage de zéro, et ce serait très coûteux.", "2": "Étiqueter 10 millions de documents est disproportionné pour ce besoin.", "3": "Des règles pour toutes les phrases possibles sont irréalistes et fragiles." },
+    tip: "Peu de données → partir d'un modèle pré-entraîné (transfer learning)." },
+
+  { id: "m1-046", module: 1, task: "1.3", obj: "1.3.c", type: "multiple", difficulty: "hard",
+    question: "A team chooses to self-host an open-source model on its own Amazon SageMaker AI endpoint instead of calling a managed API such as Amazon Bedrock. Which are typical consequences of this choice? (Select TWO.)",
+    options: ["The team has more control over the instance type, model version, and network configuration.", "The team pays only per token, with no charges when there is no traffic.", "The team is responsible for capacity planning and scaling of the endpoint.", "AWS automatically retrains the model every week.", "The model can no longer be used inside a VPC."],
+    correct: [0, 2],
+    explanation: "L'auto-hébergement donne plus de contrôle (instance, version, réseau), mais l'équipe gère la capacité et paie les instances même quand elles sont au repos.",
+    wrongExplanations: { "1": "Le paiement au token sans coût au repos correspond au modèle d'API managée (Bedrock on-demand), pas à un endpoint auto-hébergé.", "3": "Aucun réentraînement automatique : c'est à l'équipe de le mettre en place (MLOps).", "4": "Un endpoint SageMaker AI peut au contraire être déployé dans un VPC." },
+    tip: "Self-hosted = plus de contrôle, plus de responsabilités. Managed API = simplicité, paiement à l'usage." }
 ];

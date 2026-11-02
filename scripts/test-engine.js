@@ -201,12 +201,68 @@ test("storage.js : aller-retour, repli mémoire, export/import, reset", () => {
     vm.runInContext(fs.readFileSync(path.join(__dirname, "..", "js", "storage.js"), "utf8"), c);
     return win.Store;
   };
-  const S = mk(false); const st = E.newState(); st.xp = 42; st.profile.name = "Zoé";
+  const S = mk(false);
+  assert.strictEqual(S.load(), null, "pas de profil → pas d'état");
+  S.createProfile("Zoé", "🐱", "1234");
+  const st = S.load(); assert.strictEqual(st.profile.name, "Zoé"); st.xp = 42;
   S.save(st); assert.strictEqual(S.load().xp, 42); assert.ok(S.isPersistent());
   const imported = S.importJSON(S.exportJSON(st)); assert.strictEqual(imported.profile.name, "Zoé");
   assert.throws(() => S.importJSON('{"foo":1}'));
-  S.reset(); assert.strictEqual(S.load().xp, 0);
-  const F = mk(true); assert.ok(!F.isPersistent()); F.save(st); assert.strictEqual(F.load().xp, 42, "repli en mémoire");
+  S.reset(); assert.strictEqual(S.load().xp, 0); assert.strictEqual(S.load().profile.name, "Zoé", "reset garde le profil");
+  const F = mk(true); assert.ok(!F.isPersistent()); F.createProfile("Léo", "🦊"); const fs2 = F.load(); fs2.xp = 7; F.save(fs2); assert.strictEqual(F.load().xp, 7, "repli en mémoire");
+});
+test("profils : inscription, PIN, connexion, déconnexion, doublons, suppression, migration v1.0", () => {
+  const store = {};
+  const ls = { setItem: (k, v) => { store[k] = v; }, getItem: (k) => (k in store ? store[k] : null), removeItem: (k) => { delete store[k]; } };
+  // ancien format mono-profil
+  const old = E.newState(); old.profile.name = "Ancien"; old.xp = 999; store["aif-c01-quest-v1"] = JSON.stringify(old);
+  const win = { Engine: E, localStorage: ls }; const c = { window: win }; vm.createContext(c);
+  vm.runInContext(fs.readFileSync(path.join(__dirname, "..", "js", "storage.js"), "utf8"), c);
+  const S = win.Store;
+  assert.strictEqual(S.load().xp, 999, "migration conservée"); assert.strictEqual(S.profiles().length, 1); assert.ok(!store["aif-c01-quest-v1"]);
+  assert.throws(() => S.createProfile("ancien", "🐼"), /existe/);
+  assert.throws(() => S.createProfile("Bob", "🐼", "12"), /4 chiffres/);
+  const bob = S.createProfile("Bob", "🐼", "4321");
+  assert.strictEqual(S.activeId(), bob); assert.strictEqual(S.load().xp, 0);
+  S.logout(); assert.strictEqual(S.load(), null);
+  assert.ok(!S.login(bob, "0000"), "mauvais PIN refusé"); assert.ok(S.login(bob, "4321"));
+  const anc = S.profiles().find((p) => p.name === "Ancien").id; S.logout(); assert.ok(S.login(anc), "profil sans PIN");
+  assert.strictEqual(S.loadAllSummaries().length, 2);
+  const a = S.load(); a.profile.name = "Ancien2"; S.save(a); S.syncProfile(a); assert.ok(S.profiles().some((p) => p.name === "Ancien2"));
+  S.deleteProfile(); assert.strictEqual(S.profiles().length, 1); assert.strictEqual(S.load(), null);
+  assert.strictEqual(S.hashPin("x", "1234"), S.hashPin("x", "1234")); assert.notStrictEqual(S.hashPin("x", "1234"), S.hashPin("y", "1234"));
+});
+
+console.log("Amis & classement :");
+test("lien-défi : aller-retour (accents, emoji), falsification rejetée, valeurs bornées", () => {
+  const s = E.newState(); s.profile.name = "Wissém"; s.profile.avatar = "🦊"; s.xp = 1500; s.levels.a = { stars: 3 }; s.badges.x = 1;
+  s.exams.push({ score: 820, partial: false }, { score: 990, partial: true });
+  const c = E.parseInviteCode(E.makeInviteCode(s));
+  assert.deepStrictEqual([c.n, c.a, c.x, c.s, c.b, c.e], ["Wissém", "🦊", 1500, 3, 1, 820], "examen partiel ignoré");
+  const code = E.makeInviteCode(s);
+  assert.strictEqual(E.parseInviteCode(code.slice(0, -4) + "AAAA"), null);
+  assert.strictEqual(E.parseInviteCode("%%%"), null);
+  const forged = Buffer.from(JSON.stringify({ v: 1, c: { n: "<img src=x>Eve", x: 1e12 }, k: "" })).toString("base64");
+  assert.strictEqual(E.parseInviteCode(forged), null, "checksum invalide");
+  const json = JSON.stringify({ n: "<b>Eve</b>", a: "😈", x: 1e12, s: -5, e: 5000, d: "bad" });
+  let h = 0x811c9dc5; for (let i = 0; i < json.length; i++) { h ^= json.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; }
+  const ok = Buffer.from(JSON.stringify({ v: 1, c: JSON.parse(json), k: h.toString(36) })).toString("base64");
+  const e = E.parseInviteCode(ok);
+  assert.ok(!/[<>]/.test(e.n)); assert.strictEqual(e.x, 1e7); assert.strictEqual(e.s, 0); assert.strictEqual(e.e, 1000); assert.ok(/^\d{4}-/.test(e.d));
+});
+test("amis : ajout, mise à jour, refus de soi-même ; classement trié avec rangs", () => {
+  const me = E.newState(); me.profile.name = "Moi"; me.xp = 300;
+  const f = (n, x, s) => { const t = E.newState(); t.profile.name = n; t.xp = x; t.levels.l = { stars: s }; return E.parseInviteCode(E.makeInviteCode(t)); };
+  assert.ok(E.addFriend(me, f("Ana", 900, 2)).ok);
+  assert.ok(E.addFriend(me, f("Bob", 100, 9)).ok);
+  assert.strictEqual(E.addFriend(me, f("ana", 950, 2)).updated, true);
+  assert.ok(!E.addFriend(me, f("moi", 1, 1)).ok); assert.ok(!E.addFriend(me, null).ok);
+  const byXp = E.leaderboard(me, [], "x");
+  assert.deepStrictEqual(byXp.map((r) => r.n + r.rank), ["ana1", "Moi2", "Bob3"]);
+  assert.ok(byXp[1].me); assert.strictEqual(byXp[0].level, E.levelFromXp(950));
+  assert.strictEqual(E.leaderboard(me, [], "s")[0].n, "Bob");
+  const withLocal = E.leaderboard(me, [E.scoreCard(Object.assign(E.newState(), { xp: 5000, profile: { name: "Soeur", avatar: "🐼" } }))], "x");
+  assert.strictEqual(withLocal[0].n, "Soeur"); assert.strictEqual(withLocal.length, 4);
 });
 
 console.log(`\n${passed} test(s) réussi(s)` + (process.exitCode ? " — ÉCHECS ci-dessus" : " ✅"));

@@ -10,7 +10,7 @@
   function A() { return root.App; }
   function st() { return root.App.state; }
   function main() { return $("#main"); }
-  function setHTML(html) { var m = main(); m.innerHTML = html; m.scrollTop = 0; root.scrollTo(0, 0); }
+  function setHTML(html) { var m = main(); m.onclick = null; m.onchange = null; m.innerHTML = html; m.scrollTop = 0; root.scrollTo(0, 0); }
   function clearTimer() { if (timerHandle) { clearInterval(timerHandle); timerHandle = null; } }
   function worldOf(id) { return META.worlds.find(function (w) { return w.id === id; }); }
   function taskInfo(taskId) {
@@ -22,24 +22,111 @@
   function fmtTime(sec) { sec = Math.max(0, Math.floor(sec)); var m = Math.floor(sec / 60), s = sec % 60; return m + ":" + (s < 10 ? "0" : "") + s; }
 
   /* =============== Onboarding =============== */
-  S.onboarding = function () {
-    var s = st(), pick = s.profile.avatar || META.avatars[0];
-    setHTML('<div class="card center"><div style="font-size:3rem">🚀</div><h1>Bienvenue dans AWS AI Quest !</h1>' +
+  /* =============== Connexion (choix du profil + PIN) =============== */
+  S.login = function () {
+    var profs = root.Store.profiles();
+    if (!profs.length) return S.signup();
+    document.body.classList.add("fullscreen");
+    var h = '<div class="card center"><div style="font-size:3rem">🚀</div><h1>AWS AI Quest</h1><p class="muted">Qui joue aujourd\'hui ?</p></div><div class="card">' +
+      profs.map(function (p) { return '<button class="btn block" style="justify-content:flex-start;margin-bottom:8px" data-p="' + esc(p.id) + '"><span style="font-size:1.6rem">' + esc(p.avatar) + "</span> " + esc(p.name) + (p.hasPin ? " 🔒" : "") + "</button>"; }).join("") +
+      '<button class="btn primary block" id="newP" style="margin-top:6px">➕ Créer un nouveau profil</button></div>' +
+      '<p class="small muted center">🔒 Les profils sont enregistrés uniquement sur cet appareil.</p>';
+    setHTML(h);
+    $("#newP").onclick = S.signup;
+    main().onclick = function (e) {
+      var b = e.target.closest("[data-p]"); if (!b) return;
+      var p = profs.find(function (x) { return x.id === b.dataset.p; });
+      if (!p.hasPin) { if (root.Store.login(p.id)) A().onLogin(); return; }
+      U.modal('<h2>' + esc(p.avatar) + " " + esc(p.name) + '</h2><p>Entre ton code PIN (4 chiffres)</p><input class="input" id="pinIn" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" style="font-size:1.6rem;text-align:center;letter-spacing:10px">' +
+        '<div class="grid2" style="margin-top:12px"><button class="btn" id="pinNo">Annuler</button><button class="btn primary" id="pinOk">Connexion</button></div>', function (m) {
+          var inp = $("#pinIn", m); inp.focus();
+          var go = function () { if (root.Store.login(p.id, inp.value)) { U.closeModal(); A().onLogin(); } else { U.sfx("ko"); inp.value = ""; inp.classList.add("shake"); setTimeout(function () { inp.classList.remove("shake"); }, 400); U.toast("Code PIN incorrect"); } };
+          $("#pinOk", m).onclick = go; $("#pinNo", m).onclick = U.closeModal;
+          inp.onkeyup = function (e) { if (e.key === "Enter" || inp.value.length === 4) go(); };
+        });
+    };
+  };
+
+  /* =============== Inscription (création de profil) =============== */
+  S.signup = function () {
+    var pick = META.avatars[0], hasProfiles = root.Store.profiles().length > 0;
+    document.body.classList.add("fullscreen");
+    setHTML((hasProfiles ? '<button class="icon-btn" id="back" aria-label="Retour">←</button>' : "") +
+      '<div class="card center"><div style="font-size:3rem">🚀</div><h1>Inscription</h1>' +
       '<p>Traverse 5 mondes, bats les boss et décroche ta certification <b>AWS Certified AI Practitioner (AIF-C01)</b> du premier coup.</p></div>' +
       '<div class="card"><h2>Ton avatar</h2><div class="avatar-pick" id="ava">' +
       META.avatars.map(function (a) { return '<button type="button" data-a="' + a + '" class="' + (a === pick ? "sel" : "") + '" aria-label="Avatar ' + a + '">' + a + "</button>"; }).join("") +
       '</div><h2 style="margin-top:16px">Ton pseudo</h2><input class="input" id="pseudo" maxlength="20" placeholder="ex. CloudNinja" autocomplete="off">' +
-      '<h2 style="margin-top:16px">Date de ton examen</h2><input class="input" id="exdate" type="date" value="' + esc(s.settings.examDate) + '">' +
-      '<p class="small muted" style="margin-top:12px">🔒 Ta progression est enregistrée <b>sur cet appareil et dans ce navigateur</b> uniquement. Aucune donnée n\'est envoyée sur Internet.</p>' +
-      '<button class="btn primary block" id="go" style="margin-top:8px">C\'est parti !</button></div>');
-    $("#ava").onclick = function (e) { var b = e.target.closest("button"); if (!b) return; pick = b.dataset.a; $all("#ava button").forEach(function (x) { x.classList.toggle("sel", x === b); }); };
+      '<h2 style="margin-top:16px">Code PIN <span class="small muted">(facultatif, 4 chiffres)</span></h2><input class="input" id="pin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" placeholder="••••">' +
+      '<p class="small muted">Utile si plusieurs personnes jouent sur ce téléphone. C\'est un simple verrou, pas une protection forte.</p>' +
+      '<h2 style="margin-top:16px">Date de ton examen</h2><input class="input" id="exdate" type="date" value="' + esc(META.examDefault) + '">' +
+      '<p class="small muted" style="margin-top:12px">🔒 Aucun e-mail, aucun mot de passe en ligne : ton profil et ta progression sont enregistrés <b>sur cet appareil et dans ce navigateur</b> uniquement. Rien n\'est envoyé sur Internet.</p>' +
+      '<button class="btn primary block" id="go" style="margin-top:8px">Créer mon profil 🚀</button></div>');
+    var b = $("#back"); if (b) b.onclick = S.login;
+    $("#ava").onclick = function (e) { var t = e.target.closest("button"); if (!t) return; pick = t.dataset.a; $all("#ava button").forEach(function (x) { x.classList.toggle("sel", x === t); }); };
     $("#go").onclick = function () {
-      var name = $("#pseudo").value.trim();
+      var name = $("#pseudo").value.trim(), pin = $("#pin").value.trim();
       if (!name) { U.toast("Choisis un pseudo 🙂"); $("#pseudo").focus(); return; }
-      s.profile.name = name; s.profile.avatar = pick;
-      if ($("#exdate").value) s.settings.examDate = $("#exdate").value;
-      A().save(); U.sfx("win"); U.confetti(40); A().go("map");
+      try { root.Store.createProfile(name, pick, pin || null); } catch (e) { U.toast("❌ " + esc(e.message)); return; }
+      A().onLogin(function (s) { if ($("#exdate").value) s.settings.examDate = $("#exdate").value; });
+      U.sfx("win"); U.confetti(40);
     };
+  };
+
+  /* =============== Classement & amis =============== */
+  S.friends = function (by) {
+    var app = A(), s = st();
+    by = by || "x";
+    var others = root.Store.loadAllSummaries().filter(function (o) { return o.state.profile.name !== s.profile.name; }).map(function (o) { return E.scoreCard(o.state); });
+    var rows = E.leaderboard(s, others, by), me = rows.find(function (r) { return r.me; });
+    var label = { x: "XP", s: "★", e: "/1000" };
+    var medal = function (r) { return r === 1 ? "🥇" : r === 2 ? "🥈" : r === 3 ? "🥉" : "#" + r; };
+    var t = E.titleFor(me.level, META.playerTitles);
+    var h = '<h1>🏆 Classement</h1><div class="card center"><div style="font-size:2.4rem">' + medal(me.rank) + '</div><b>Tu es ' + (me.rank === 1 ? "1er" : me.rank + "e") + " sur " + rows.length + '</b><div class="muted small">Rang : ' + t.emoji + " " + t.title + " · niveau " + me.level + "</div></div>" +
+      '<div class="row" style="margin-bottom:10px">' + [["x", "⚡ XP"], ["s", "★ Étoiles"], ["e", "📝 Examen"]].map(function (o) { return '<button class="btn small ' + (o[0] === by ? "primary" : "") + '" data-by="' + o[0] + '">' + o[1] + "</button>"; }).join("") + "</div>" +
+      '<div class="card">' + rows.map(function (r) {
+        return '<div class="row" style="padding:8px 0;border-bottom:1px solid var(--line)' + (r.me ? ";font-weight:700" : "") + '"><span style="min-width:34px;text-align:center">' + medal(r.rank) + '</span><span style="font-size:1.5rem">' + esc(r.a) + '</span><span class="grow">' + esc(r.n) + (r.me ? " (toi)" : "") +
+          '<br><span class="small muted">Niv. ' + r.level + " · " + esc(E.titleFor(r.level, META.playerTitles).title) + (r.me ? "" : " · màj " + esc(r.d)) + "</span></span><b>" + r[by] + " " + label[by] + "</b></div>";
+      }).join("") + (rows.length === 1 ? '<p class="muted small center" style="margin-top:10px">Tu es seul·e pour l\'instant. Invite des amis pour les défier ! 👇</p>' : "") + "</div>" +
+      '<div class="card"><h2>🤝 Inviter un ami</h2><p class="small">Envoie ton <b>lien-défi</b> : ton ami ouvre le jeu, voit ton score et t\'ajoute à son classement. Renvoie ton lien de temps en temps pour mettre ton score à jour chez lui.</p>' +
+      '<button class="btn primary block" id="share">📤 Partager mon lien-défi</button></div>' +
+      '<div class="card"><h2>➕ Ajouter un ami</h2><p class="small muted">Ton ami t\'a envoyé son lien ? Ouvre-le directement, ou colle-le ici :</p><input class="input" id="paste" placeholder="Colle le lien ici" autocomplete="off"><button class="btn block" id="addF" style="margin-top:8px">Ajouter</button></div>' +
+      (Object.keys(s.friends).length ? '<button class="btn danger block small" id="clearF">Retirer tous mes amis du classement</button>' : "") +
+      '<p class="small muted center">Classement entre amis, sans serveur : les scores sont ceux du dernier lien reçu de chaque ami.</p>';
+    setHTML(h);
+    main().onclick = function (e) { var b = e.target.closest("[data-by]"); if (b) S.friends(b.dataset.by); };
+    $("#share").onclick = function () {
+      var url = location.href.split("#")[0] + "#/invite/" + E.makeInviteCode(s);
+      var text = s.profile.avatar + " " + s.profile.name + " te défie sur AWS AI Quest (préparation AWS AI Practitioner) ! " + s.xp + " XP, " + E.totalStars(s) + " ★. Bats mon score :";
+      if (navigator.share) { navigator.share({ title: "AWS AI Quest", text: text, url: url }).catch(function () {}); return; }
+      U.modal('<h2>📤 Ton lien-défi</h2><p class="small">Copie ce lien et envoie-le par SMS, WhatsApp ou e-mail :</p><textarea class="input" id="lnk" rows="4" readonly style="font-size:.75rem"></textarea><div class="grid2" style="margin-top:10px"><button class="btn" id="lc">Fermer</button><button class="btn primary" id="lcp">📋 Copier</button></div>', function (m) {
+        $("#lnk", m).value = text + " " + url; $("#lc", m).onclick = U.closeModal;
+        $("#lcp", m).onclick = function () { var ta = $("#lnk", m); ta.select(); try { (navigator.clipboard ? navigator.clipboard.writeText(ta.value) : Promise.reject()).then(function () { U.toast("📋 Copié !"); }, function () { document.execCommand("copy"); U.toast("📋 Copié !"); }); } catch (e) { U.toast("Sélectionne et copie le texte."); } };
+      });
+    };
+    $("#addF").onclick = function () {
+      var v = $("#paste").value.trim(), m = v.match(/invite\/([A-Za-z0-9_-]+)/);
+      var card = E.parseInviteCode(m ? m[1] : v);
+      var r = E.addFriend(s, card);
+      if (!r.ok) { U.toast("❌ " + esc(r.reason)); return; }
+      app.save(); U.sfx("win"); U.toast("✅ " + esc(card.n) + (r.updated ? " mis à jour !" : " ajouté à tes amis !")); S.friends(by);
+    };
+    var cf = $("#clearF"); if (cf) cf.onclick = function () { U.confirmBox("Retirer tous tes amis ?", "Ils disparaîtront de ton classement. Tu pourras les rajouter avec leur lien.", "Retirer", function () { s.friends = {}; app.save(); S.friends(by); }, true); };
+  };
+
+  /* Ouverture d'un lien-défi */
+  S.invite = function (code) {
+    var app = A(), s = st(), card = E.parseInviteCode(code);
+    if (!card) { U.toast("❌ Lien d'invitation invalide ou incomplet"); return app.go("friends"); }
+    var mine = card.n.toLowerCase() === s.profile.name.toLowerCase();
+    setHTML('<div class="card center"><div style="font-size:3rem">' + esc(card.a) + '</div><h1>' + esc(card.n) + ' te défie !</h1>' +
+      '<div class="grid2"><div class="stat"><b>' + card.x + '</b><span class="small muted">XP (niv. ' + E.levelFromXp(card.x) + ')</span></div><div class="stat"><b>' + card.s + ' ★</b><span class="small muted">étoiles</span></div>' +
+      '<div class="stat"><b>' + card.b + '</b><span class="small muted">badges</span></div><div class="stat"><b>' + (card.e || "—") + '</b><span class="small muted">meilleur examen</span></div></div>' +
+      '<p class="small muted">Score du ' + esc(card.d) + "</p>" +
+      (mine ? '<p>C\'est ton propre lien 😄</p><button class="btn block" id="toF">Voir le classement</button>' :
+        '<button class="btn primary block" id="addI">➕ Ajouter ' + esc(card.n) + ' à mes amis</button><p class="small muted" style="margin-top:8px">Ensuite, renvoie-lui ton propre lien depuis l\'onglet 🏆 pour qu\'il te voie aussi !</p>') + "</div>");
+    var t = $("#toF"); if (t) t.onclick = function () { app.go("friends"); };
+    var a = $("#addI"); if (a) a.onclick = function () { var r = E.addFriend(s, card); if (r.ok) { app.save(); U.sfx("win"); U.confetti(40); U.toast("✅ " + esc(card.n) + " ajouté !"); } app.go("friends"); };
   };
 
   /* =============== Carte =============== */
@@ -722,11 +809,15 @@
     h += '<div class="card"><h2>⚙️ Réglages</h2>' +
       sw("sSound", "🔊 Sons", s.settings.sound) + sw("sVib", "📳 Vibrations", s.settings.vibration) + sw("sTimer", "⏱️ Chrono (" + s.settings.timerSeconds + " s par question, bonus de rapidité)", s.settings.timer) +
       '<div class="switch"><span>🌗 Thème</span><select id="sTheme" class="input" style="width:auto"><option value="auto">Auto</option><option value="light">Clair</option><option value="dark">Sombre</option></select></div></div>';
+    h += '<div class="card"><h2>👥 Compte</h2><div class="grid2"><button class="btn" id="pShop">🛒 Boutique</button><button class="btn" id="pFriends">🏆 Classement</button></div>' +
+      '<button class="btn block" id="pPin" style="margin-top:10px">🔒 ' + (root.Store.profiles().some(function (p) { return p.id === root.Store.activeId() && p.hasPin; }) ? "Modifier ou retirer mon code PIN" : "Ajouter un code PIN") + '</button>' +
+      '<button class="btn block" id="pLogout" style="margin-top:10px">🔄 Changer de profil / Se déconnecter</button></div>';
     h += '<div class="card"><h2>📲 Installer l\'application</h2><button class="btn block" id="pInstall">Voir les instructions</button></div>';
     h += '<div class="card"><h2>💾 Sauvegarde</h2><p class="small">🔒 Ta progression est enregistrée <b>sur cet appareil et dans ce navigateur</b>' + (root.Store.isPersistent() ? "" : ' <b style="color:var(--ko)">(stockage indisponible : la progression sera perdue à la fermeture. Évite la navigation privée.)</b>') +
       '. Si tu changes de téléphone ou de navigateur, exporte-la puis importe-la.</p>' +
       '<div class="grid2"><button class="btn" id="pExport">⬇️ Exporter</button><button class="btn" id="pImport">⬆️ Importer</button></div>' +
-      '<button class="btn danger block" id="pReset" style="margin-top:10px">🗑️ Remettre à zéro</button></div>';
+      '<button class="btn danger block" id="pReset" style="margin-top:10px">🗑️ Remettre ma progression à zéro</button>' +
+      '<button class="btn danger block" id="pDelete" style="margin-top:10px">❌ Supprimer ce profil</button></div>';
     h += '<p class="small muted center">AWS AI Quest · version ' + esc(app.version) + '<br>Contenu basé sur le guide officiel AIF-C01 v1.2. Projet personnel, non affilié à AWS.</p>';
     setHTML(h);
     $("#sTheme").value = s.settings.theme;
@@ -738,6 +829,21 @@
     $("#sTimer").onchange = function () { s.settings.timer = this.checked; app.save(); };
     $("#sTheme").onchange = function () { s.settings.theme = this.value; app.save(); app.applyTheme(); };
     $("#pInstall").onclick = S.installHelp;
+    $("#pShop").onclick = function () { app.go("shop"); };
+    $("#pFriends").onclick = function () { app.go("friends"); };
+    $("#pLogout").onclick = function () { app.save(); root.Store.logout(); app.state = null; app.go("login"); };
+    $("#pPin").onclick = function () {
+      U.modal('<h2>🔒 Code PIN</h2><p class="small">4 chiffres pour verrouiller ton profil sur ce téléphone. Laisse vide pour retirer le code.</p><input class="input" id="np" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" style="font-size:1.4rem;text-align:center;letter-spacing:8px">' +
+        '<div class="grid2" style="margin-top:12px"><button class="btn" id="npNo">Annuler</button><button class="btn primary" id="npOk">Enregistrer</button></div>', function (m) {
+          $("#npNo", m).onclick = U.closeModal;
+          $("#npOk", m).onclick = function () { try { root.Store.setPin($("#np", m).value.trim() || null); U.closeModal(); U.toast("🔒 Code PIN mis à jour"); S.profile(); } catch (e) { U.toast("❌ " + esc(e.message)); } };
+        });
+    };
+    $("#pDelete").onclick = function () {
+      U.confirmBox("Supprimer le profil « " + esc(s.profile.name) + " » ?", "Le profil et <b>toute sa progression</b> seront effacés définitivement de cet appareil. Pense à exporter ta sauvegarde avant.", "Supprimer", function () {
+        root.Store.deleteProfile(); app.state = null; U.toast("Profil supprimé"); app.go("login");
+      }, true);
+    };
     $("#pExport").onclick = function () {
       var txt = root.Store.exportJSON(s);
       U.modal('<h2>⬇️ Exporter</h2><p class="small">Copie ce texte et garde-le (notes, e-mail à toi-même…). Tu pourras le coller dans « Importer » sur un autre appareil.</p><textarea class="input" id="exTxt" rows="8" readonly style="font-size:.75rem"></textarea>' +
@@ -764,7 +870,7 @@
     };
     $("#pReset").onclick = function () {
       U.confirmBox("Tout effacer ?", "XP, étoiles, badges, pièces, statistiques… <b>Tout sera perdu définitivement</b> sur cet appareil. Pense à exporter d'abord si tu veux garder une copie.", "Oui, tout effacer", function () {
-        root.Store.reset(); app.state = E.newState(); app.save(); app.applyTheme(); app.renderTop(); U.toast("Progression remise à zéro"); app.go("onboarding");
+        root.Store.reset(); app.state = root.Store.load(); app.applyTheme(); app.renderTop(); U.toast("Progression remise à zéro"); app.go("map");
       }, true);
     };
   };

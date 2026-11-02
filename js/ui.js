@@ -126,6 +126,19 @@
       '<rect x="92" y="110" width="96" height="64" rx="8" fill="#ef444433" stroke="#ef4444"/><text x="140" y="140" text-anchor="middle" font-weight="700">FP</text><text x="140" y="158" text-anchor="middle" font-size="10">(fausse alerte)</text>' +
       '<rect x="192" y="110" width="96" height="64" rx="8" fill="#16a34a33" stroke="#16a34a"/><text x="240" y="148" text-anchor="middle" font-weight="700">TN</text></svg>'
   };
+  DIAGRAMS.embeddings = '<svg viewBox="0 0 320 200" role="img" aria-label="Espace des embeddings : les mots de sens proche sont proches">' +
+    '<rect x="4" y="4" width="312" height="192" rx="12" fill="none" stroke="#9995"/>' +
+    [["chat", 60, 60, "#16a34a"], ["félin", 92, 46, "#16a34a"], ["chaton", 78, 88, "#16a34a"], ["facture", 250, 150, "#ef4444"], ["paiement", 222, 172, "#ef4444"], ["voiture", 240, 50, "#06b6d4"], ["automobile", 205, 74, "#06b6d4"]].map(function (p) {
+      return '<circle cx="' + p[1] + '" cy="' + p[2] + '" r="5" fill="' + p[3] + '"/><text x="' + (p[1] + 8) + '" y="' + (p[2] + 4) + '" font-size="12">' + p[0] + "</text>";
+    }).join("") +
+    '<text x="160" y="118" text-anchor="middle" font-size="11" opacity=".8">sens proche = vecteurs proches</text></svg>';
+  DIAGRAMS.agentloop = '<svg viewBox="0 0 320 200" role="img" aria-label="Boucle d\'un agent : raisonner, agir, observer">' +
+    '<circle cx="160" cy="100" r="62" fill="none" stroke="#6d4aff" stroke-width="2" stroke-dasharray="6 5"/>' +
+    [["🧠 Raisonner", 160, 30], ["🛠️ Agir (outil)", 250, 140], ["👀 Observer", 70, 140]].map(function (p) {
+      return '<rect x="' + (p[1] - 58) + '" y="' + (p[2] - 16) + '" width="116" height="30" rx="10" fill="#6d4aff22" stroke="#6d4aff"/><text x="' + p[1] + '" y="' + (p[2] + 4) + '" text-anchor="middle" font-size="12" font-weight="600">' + p[0] + "</text>";
+    }).join("") +
+    '<text x="160" y="96" text-anchor="middle" font-size="12" font-weight="700">Objectif</text><text x="160" y="112" text-anchor="middle" font-size="10">+ mémoire</text>' +
+    '<text x="160" y="192" text-anchor="middle" font-size="10">Outils via API / MCP · jusqu\'à ce que la tâche soit accomplie</text></svg>';
   function registerDiagram(id, svg) { DIAGRAMS[id] = svg; }
 
   /* Rendu des blocs de cours (contenu de confiance écrit dans data/*.js) */

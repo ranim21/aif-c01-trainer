@@ -1,7 +1,7 @@
 /* AWS AI Quest — service worker
    Stratégie : pré-cache de tous les fichiers (cache-first) → fonctionne hors ligne.
    MISE À JOUR : incrémenter CACHE_VERSION à chaque déploiement (et VERSION dans js/app.js). */
-var CACHE_VERSION = "aif-quest-v1.0.0";
+var CACHE_VERSION = "aif-quest-v1.1.0";
 var ASSETS = [
   "./",
   "index.html",
@@ -11,9 +11,13 @@ var ASSETS = [
   "icons/icon-192.png",
   "icons/icon-512.png",
   "data/meta.js",
+  "data/objectives.js",
   "data/m1-course.js",
   "data/m1-questions.js",
   "data/m1-labs.js",
+  "data/m2-course.js",
+  "data/m2-questions.js",
+  "data/m2-labs.js",
   "js/engine.js",
   "js/storage.js",
   "js/ui.js",
