@@ -49,6 +49,23 @@ scripts/validate.js   scripts/test-engine.js   scripts/make-icons.js
 4. Dire à l'utilisateur de rafraîchir (nouvelle version du cache SW).
 5. En cas d'échec : expliquer et proposer Netlify Drop ou Cloudflare Pages. Pas de contournement risqué.
 
+## Vérifications (à lancer avant chaque commit de phase)
+```
+node scripts/make-icons.js     # (re)génère icons/ si besoin
+node scripts/validate.js       # contenu : champs, index, doublons, décomptes, couverture
+node scripts/test-engine.js    # logique du moteur et sauvegarde
+node scripts/check-site.js     # syntaxe JS, ressources externes, manifest, SW, versions
+```
+Test navigateur de bout en bout : voir l'en-tête de `scripts/browser-smoke.js` (Chrome sans interface + `python -m http.server`).
+Captures mobiles : Chrome sans interface impose une largeur minimale d'environ 500 px sous Windows. Il faut donc afficher la page dans une iframe de 375×667 pour une vraie vue téléphone.
+
+## Ajouter un monde (phases 2 à 5)
+1. Créer `data/mN-course.js`, `data/mN-questions.js` et `data/mN-labs.js` (même format que le Monde 1, ids `mN-001`…).
+2. Les ajouter dans `index.html` (avant `js/engine.js`) et dans `ASSETS` de `sw.js`.
+3. Incrémenter `CACHE_VERSION` (sw.js) et `VERSION` (js/app.js), en gardant les deux identiques.
+4. Lancer les 3 scripts de vérification.
+
 ## Environnement (Windows)
-- Bash = Git Bash. `python` n'est pas dans le PATH : utiliser `/c/Users/Wisse/anaconda3/python.exe` si besoin.
-- gh et Node.js : à installer par l'utilisateur via winget (pas encore fait au 2026-11-02).
+- Bash = Git Bash. `python` n'est pas dans le PATH : utiliser `/c/Users/Wisse/anaconda3/python.exe`.
+- Node : si `node` est absent du PATH, utiliser un Node portable (zip officiel nodejs.org vérifié par SHA-256) placé dans le scratchpad.
+- gh : installé via winget dans `C:\Program Files\GitHub CLI` (ajouter au PATH du shell si besoin).

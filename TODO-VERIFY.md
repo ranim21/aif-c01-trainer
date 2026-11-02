@@ -11,3 +11,10 @@ Pour chacun : vérifier sur docs.aws.amazon.com, puis cocher.
 - [ ] **Policy in AgentCore** : nom exact et rôle.
 
 ## Faits techniques (complété au fil des phases)
+
+### Monde 1
+- [ ] **Amazon Quick** : présenté dans le cours comme un « espace de travail agentique pour les équipes métier : BI (successeur de QuickSight), recherche, automatisation de workflows ». Sources consultées : billet du AWS News Blog sur le lancement d'Amazon Quick Suite (octobre 2025) et articles tiers. Le renommage en « Amazon Quick » n'est confirmé que par une source tierce, plus le guide d'examen qui utilise ce nom. Questions concernées : m1-038, m1-039.
+- [ ] **Kiro** : présenté comme un « IDE agentique d'AWS, développement guidé par des spécifications (exigences → conception → tâches) ». Sources : articles tiers, la documentation officielle (kiro.dev) n'a pas été lue. Question concernée : m1-038.
+- [ ] **SageMaker AI Asynchronous inference** : gros payloads et traitement long, file d'attente, mise à l'échelle jusqu'à 0 instance. Le cours ne cite volontairement aucune limite chiffrée (taille, durée). Question m1-004.
+- [ ] **SageMaker Serverless inference** : présenté comme limité pour les gros payloads et les traitements longs, sans chiffre. Question m1-004 (option fausse).
+- [ ] **TP console** (m1-lab5 à lab7) : noms exacts des menus de la console (« Real-time analysis » dans Comprehend, « Label detection » dans Rekognition) et conditions actuelles de l'offre gratuite AWS (le programme Free Tier a changé en 2025 : vérifier votre compte).

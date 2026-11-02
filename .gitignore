@@ -1,0 +1,5 @@
+__*.html
+__*.js
+node_modules/
+.DS_Store
+Thumbs.db
