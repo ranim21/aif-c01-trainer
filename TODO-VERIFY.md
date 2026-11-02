@@ -32,3 +32,15 @@ Pour chacun : vérifier sur docs.aws.amazon.com, puis cocher.
 - [ ] **Prompt caching (Bedrock)** : décrit de façon générique (préfixe de prompt mis en cache, lectures moins chères). Vérifier les modèles compatibles et la durée de vie du cache.
 - [ ] **Bedrock Knowledge Bases** : le TP propose S3 Vectors comme option économique. Vérifier sa disponibilité dans la Région et dans l'assistant de création de la console.
 - [ ] **Paramètres d'inférence** : Top K n'existe pas pour tous les modèles dans Bedrock (cela dépend du fournisseur).
+
+### Domaine 4
+- [ ] **Amazon Augmented AI (A2I)** : cité pour la revue humaine (human-in-the-loop). Il n'apparaît ni dans la liste in-scope ni dans la liste out-of-scope du guide.
+- [ ] **AWS AI Service Cards** : documents de transparence d'AWS sur ses services d'IA (vérifier leur nom actuel et leur emplacement).
+- [ ] **Guardrails** : catégories des filtres de contenu (Hate, Insults, Sexual, Violence, Misconduct, Prompt Attack) et existence des niveaux Classic/Standard, d'après la documentation consultée le 2026-11-02.
+
+### Domaine 5
+- [ ] **Policy in AgentCore** : la documentation consultée parle de règles en langage naturel ou d'un langage de politiques compatible Cedar, appliquées à chaque appel d'outil via AgentCore Gateway.
+- [ ] **Bedrock model invocation logging** : destinations (CloudWatch Logs, S3) et contenu journalisé.
+- [ ] **Amazon Inspector** : couverture (EC2, images de conteneurs ECR, Lambda) à confirmer pour la version actuelle.
+- [ ] **AWS Audit Manager** : présenté comme « culture », car il ne figure pas dans la liste in-scope.
+- [ ] **Generative AI Security Scoping Matrix** : définitions des scopes 1 à 5, d'après la page officielle AWS et le blog AWS Security (consultés via la recherche le 2026-11-02).

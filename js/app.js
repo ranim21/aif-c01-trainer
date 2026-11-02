@@ -2,7 +2,7 @@
 (function (root) {
   "use strict";
   var E = root.Engine, U = root.UI, META = root.META, S = root.Screens;
-  var VERSION = "1.2.0";    // garder synchronisé avec CACHE_VERSION dans sw.js
+  var VERSION = "1.3.0";    // garder synchronisé avec CACHE_VERSION dans sw.js
 
   var modules = {};
   META.worlds.forEach(function (w) { if (root[w.key]) modules[w.id] = root[w.key]; });

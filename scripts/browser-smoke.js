@@ -14,7 +14,7 @@
   step("joker fifty+hint", function(){ var b=document.querySelector('[data-j="hint"]'); b.click(); });
   step("play level 1.1", function(){ playAll(1); if(!/Leçon validée/.test($("#main").textContent)) throw Error("result: "+$("#main").textContent.slice(0,120)); });
   step("unlock 1.2", function(){ if(!Engine.isUnlocked(A.state,A.levels,"w1-1.2")) throw Error("locked"); });
-  ["w1-1.2","w1-1.3","w1-mix","w1-boss","w2-2.1","w2-2.2","w2-2.3","w2-mix","w2-boss","w3-3.1","w3-3.2","w3-3.3","w3-3.4","w3-mix","w3-boss"].forEach(function(id){ step("play "+id, function(){ Screens.startLevel(id); A.render(); playAll(0); if(!A.state.levels[id].passed) throw Error("not passed"); }); });
+  ["w1-1.2","w1-1.3","w1-mix","w1-boss","w2-2.1","w2-2.2","w2-2.3","w2-mix","w2-boss","w3-3.1","w3-3.2","w3-3.3","w3-3.4","w3-mix","w3-boss","w4-4.1","w4-4.2","w4-mix","w4-boss","w5-5.1","w5-5.2","w5-mix","w5-boss"].forEach(function(id){ step("play "+id, function(){ Screens.startLevel(id); A.render(); playAll(0); if(!A.state.levels[id].passed) throw Error("not passed"); }); });
   step("boss badge", function(){ if(!A.state.badges.boss1) throw Error("no boss1 badge"); });
   step("stats", function(){ A.go("stats"); A.render(); if(!$(".radar")) throw Error("no radar"); });
   step("shop buy", function(){ A.state.coins+=500; A.go("shop"); A.render(); $('[data-buy="th_ocean"]').click(); $('[data-equip="th_ocean"]').click(); if(document.documentElement.dataset.color!=="ocean") throw Error("theme"); });
@@ -31,7 +31,7 @@
      var ex=A.state.examInProgress; ex.ids.forEach(function(id,k){ var q=A.qById[id]; if(k<10) ex.resp[k]=q.correct.slice(); }); ex.flags[2]=true; A.save(); A.render(); $("#xGrid").click(); $("#xSubmit").click(); document.querySelector('[data-x="yes"]').click();
      if(!/\/ 1000/.test($("#main").textContent)) throw Error("no exam result"); });
   step("exam badge", function(){ if(!A.state.badges.exam_done) throw Error("no exam badge"); });
-  step("world 4 locked (no content)", function(){ if(Engine.worldUnlocked(A.state,A.levels,4)) throw Error("w4 should be unavailable"); });
+  step("full exam 65q/90min", function(){ var p=Engine.buildExam(META,A.modules); if(p.partial||p.questions.length!==65||p.minutes!==90) throw Error("exam "+p.questions.length+" "+p.minutes); });
   step("friends + share", function(){ A.go("friends"); A.render(); if(!/Classement/.test($("#main").textContent)) throw Error("no board"); try{Object.defineProperty(navigator,"share",{value:undefined,configurable:true});}catch(e){} $("#share").click(); if(!/invite[/]/.test($("#lnk").value)) throw Error("no link"); UI.closeModal(); });
   step("add friend via paste", function(){ var t=Engine.newState(); t.profile.name="Amie"; t.xp=99999; var code=Engine.makeInviteCode(t); $("#paste").value="https://x/#/invite/"+code; $("#addF").click(); if(!A.state.friends.amie) throw Error("not added"); if(!/Amie/.test($("#main").textContent)) throw Error("not listed"); });
   step("invite route", function(){ var t=Engine.newState(); t.profile.name="Bob<b>"; var code=Engine.makeInviteCode(t); A.go("invite/"+code); if(document.querySelector("#main b b")) throw Error("html injection"); $("#addI").click(); if(!A.state.friends["bobb"]) throw Error("bob not added "+Object.keys(A.state.friends)); });

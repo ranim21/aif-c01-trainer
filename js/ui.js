@@ -153,6 +153,17 @@
       var h = 18 + p[1] * 22, x = 12 + i * 61;
       return '<rect x="' + x + '" y="' + (140 - h) + '" width="50" height="' + h + '" rx="6" fill="#ff9900" opacity="' + (0.35 + i * 0.15) + '"/><text x="' + (x + 25) + '" y="156" text-anchor="middle" font-size="9">' + p[0] + "</text>";
     }).join("") + '<text x="12" y="14" font-size="10">Coût / effort / données nécessaires →</text></svg>';
+  DIAGRAMS.shared = '<svg viewBox="0 0 320 190" role="img" aria-label="Modèle de responsabilité partagée">' +
+    '<rect x="8" y="8" width="304" height="84" rx="10" fill="#ff990022" stroke="#ff9900"/>' +
+    '<text x="160" y="28" text-anchor="middle" font-size="12" font-weight="700">CLIENT : sécurité DANS le cloud</text>' +
+    '<text x="160" y="48" text-anchor="middle" font-size="10.5">Données (prompts, documents) · IAM · chiffrement activé</text>' +
+    '<text x="160" y="64" text-anchor="middle" font-size="10.5">Réseau (VPC, PrivateLink) · Guardrails · logs</text>' +
+    '<text x="160" y="80" text-anchor="middle" font-size="10.5">Usage et conformité de l\'application</text>' +
+    '<rect x="8" y="100" width="304" height="82" rx="10" fill="#232f3e22" stroke="#5f6b7a"/>' +
+    '<text x="160" y="120" text-anchor="middle" font-size="12" font-weight="700">AWS : sécurité DU cloud</text>' +
+    '<text x="160" y="140" text-anchor="middle" font-size="10.5">Datacenters, matériel, réseau physique</text>' +
+    '<text x="160" y="156" text-anchor="middle" font-size="10.5">Hyperviseurs, services managés (Bedrock…)</text>' +
+    '<text x="160" y="172" text-anchor="middle" font-size="10.5">Infrastructure des modèles hébergés</text></svg>';
   function registerDiagram(id, svg) { DIAGRAMS[id] = svg; }
 
   /* Rendu des blocs de cours (contenu de confiance écrit dans data/*.js) */
